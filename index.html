@@ -13,10 +13,11 @@
     <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@700&family=Inter:wght@400;600&display=swap" rel="stylesheet">
     
     <style>
-        /* Estilo para los marcadores de posición (placeholders) */
-        .placeholder {
-            @apply bg-gray-100 border-l-4 border-gray-400 border-dashed text-gray-600 italic p-4 rounded-md my-3;
-            content: 'Agrega aquí tu resumen, definiciones clave, ejemplos o análisis de fallos.';
+        /* --- Clase para justificar texto y mejorar interlineado --- */
+        .content-box {
+            @apply p-4 bg-white rounded-lg shadow border border-gray-200 my-3;
+            text-align: justify;
+            line-height: 1.7; /* Aumenta el interlineado para mejor legibilidad */
         }
         
         /* Estilos para la navegación lateral */
@@ -27,7 +28,7 @@
             @apply bg-blue-100 text-blue-800 font-semibold;
         }
 
-        /* --- NUEVO SISTEMA DE FUENTES Y TAMAÑOS --- */
+        /* --- SISTEMA DE FUENTES Y TAMAÑOS --- */
         
         /* Fuente base para toda la página */
         body {
@@ -37,36 +38,36 @@
 
         /* h2: Títulos de Unidad */
         section h2 {
-            @apply text-4xl font-bold mt-8 mb-4 pb-2; /* Más grande */
-            font-family: 'EB Garamond', serif; /* Tipografía diferente */
-            border-bottom-width: 2px; /* Subrayado */
+            @apply text-4xl font-bold mt-8 mb-4 pb-2;
+            font-family: 'EB Garamond', serif;
+            border-bottom-width: 2px;
         }
 
         /* h3: Subtítulos principales (ej. a) Hechos y Actos...) */
         section h3 {
-            @apply text-2xl font-semibold mt-6 mb-3; /* Tamaño intermedio */
-            font-family: 'EB Garamond', serif; /* Tipografía diferente */
+            @apply text-2xl font-semibold mt-6 mb-3;
+            font-family: 'EB Garamond', serif;
         }
 
         /* h4: Subtítulos secundarios (ej. Clasificación) */
         section h4 {
-            @apply text-xl font-semibold text-gray-800 mt-5 mb-2; /* Tamaño más pequeño */
-            font-family: 'EB Garamond', serif; /* Tipografía diferente */
+            @apply text-xl font-semibold text-gray-800 mt-5 mb-2;
+            font-family: 'EB Garamond', serif;
         }
         
-        /* --- NUEVO SISTEMA DE COLOR POR UNIDAD --- */
+        /* --- NUEVO SISTEMA DE COLOR (ACTUALIZADO) --- */
         
-        /* Unidad 10: Hechos y Actos (Azul) */
-        .unit-10-color { @apply text-blue-800; }
-        .unit-10-border { @apply border-blue-200; }
+        /* Unidad 10: Hechos y Actos (Rojo) - ¡Como pediste! */
+        .unit-10-color { @apply text-red-800; }
+        .unit-10-border { @apply border-red-200; }
         
-        /* Unidad 11: Formas (Verde) */
-        .unit-11-color { @apply text-green-800; }
-        .unit-11-border { @apply border-green-200; }
+        /* Unidad 11: Formas (Azul) */
+        .unit-11-color { @apply text-blue-800; }
+        .unit-11-border { @apply border-blue-200; }
         
-        /* Unidad 12: Defectos (Rojo) */
-        .unit-12-color { @apply text-red-800; }
-        .unit-12-border { @apply border-red-200; }
+        /* Unidad 12: Defectos (Ámbar/Naranja) */
+        .unit-12-color { @apply text-amber-800; }
+        .unit-12-border { @apply border-amber-200; }
         
         /* Unidad 13: Nulidades (Púrpura) */
         .unit-13-color { @apply text-purple-800; }
@@ -76,155 +77,39 @@
         .unit-14-color { @apply text-slate-800; }
         .unit-14-border { @apply border-slate-200; }
 
-        /* Unidad 9: Persona Jurídica (Índigo) */
-        .unit-9-color { @apply text-indigo-800; }
-        .unit-9-border { @apply border-indigo-200; }
-
-        /* --- ESTILOS PARA MENÚ DESPLEGABLE --- */
-        .sidebar-collapsible {
-            @apply flex justify-between items-center py-2 px-4 rounded-lg cursor-pointer;
-            @apply text-sm font-medium text-gray-700;
-            transition: background-color 0.2s ease, color 0.2s ease;
-        }
-        .sidebar-collapsible:hover {
-            @apply bg-blue-50 text-blue-800;
-        }
-        .sidebar-collapsible > a {
-            @apply flex-grow;
-        }
-        .sidebar-collapsible > a:hover {
-            @apply text-blue-800 underline;
-        }
-        .sidebar-arrow {
-            @apply transition-transform duration-200 text-blue-500;
-            font-size: 0.8em;
-            margin-left: 8px;
-        }
-        .sidebar-arrow.rotated {
-            @apply rotate-90;
-        }
-        .submenu {
-            @apply list-none pl-5 mt-1 space-y-1;
-            overflow: hidden; /* Para la animación (aunque aquí es instantáneo con 'hidden') */
-        }
-        .submenu-link {
-            @apply block text-xs font-medium text-gray-600 py-1 px-3 rounded-md hover:bg-gray-100 hover:text-black;
-        }
-        .hidden {
-            display: none;
-        }
+        /* Unidad 9: Persona Jurídica (Verde) */
+        .unit-9-color { @apply text-green-800; }
+        .unit-9-border { @apply border-green-200; }
         
     </style>
 </head>
 <body class="bg-gray-50">
 
     <div class="flex">
-        <!-- ==== NAVEGACIÓN LATERAL FIJA ==== -->
+        <!-- ==== NAVEGACIÓN LATERAL FIJA (SIMPLE) ==== -->
         <aside class="w-1/5 bg-white h-screen sticky top-0 border-r p-6 overflow-y-auto">
             <h1 class="text-xl font-bold text-blue-900 mb-6">Parcial 2: Civil I</h1>
             <nav>
-                <ul class="space-y-1">
-                    <!-- Unidad 10 -->
-                    <li>
-                        <div class="sidebar-collapsible">
-                            <a href="#unidad10">Unidad 10: Hechos y Actos</a>
-                            <span class="sidebar-arrow">►</span>
-                        </div>
-                        <ul class="submenu hidden">
-                            <li><a href="#unidad10-esquema" class="submenu-link">Esquema General</a></li>
-                            <li><a href="#unidad10-a" class="submenu-link">a) Hechos Jurídicos</a></li>
-                            <li><a href="#unidad10-b" class="submenu-link">b) Actos Voluntarios</a></li>
-                            <li><a href="#unidad10-c" class="submenu-link">c) Imputación</a></li>
-                            <li><a href="#unidad10-d" class="submenu-link">d) Involuntarios / Ilícitos</a></li>
-                            <li><a href="#unidad10-e" class="submenu-link">e) Acto Jurídico</a></li>
-                            <li><a href="#unidad10-f" class="submenu-link">f) Modalidades</a></li>
-                            <li><a href="#unidad10-g" class="submenu-link">g) Efectos / Interpretación</a></li>
-                        </ul>
-                    </li>
-                    <!-- Unidad 11 -->
-                    <li>
-                        <div class="sidebar-collapsible">
-                            <a href="#unidad11">Unidad 11: Formas</a>
-                            <span class="sidebar-arrow">►</span>
-                        </div>
-                        <ul class="submenu hidden">
-                            <li><a href="#unidad11-a" class="submenu-link">a) Forma: Concepto</a></li>
-                            <li><a href="#unidad11-b" class="submenu-link">b) Instrumentos Públicos</a></li>
-                            <li><a href="#unidad11-c" class="submenu-link">c) Escrituras Públicas</a></li>
-                            <li><a href="#unidad11-d" class="submenu-link">d) Instrumentos Privados</a></li>
-                            <li><a href="#unidad11-e" class="submenu-link">e) Firma</a></li>
-                            <li><a href="#unidad11-f" class="submenu-link">f) Fuerza Probatoria</a></li>
-                        </ul>
-                    </li>
-                    <!-- Unidad 12 -->
-                    <li>
-                        <div class="sidebar-collapsible">
-                            <a href="#unidad12">Unidad 12: Defectos</a>
-                            <span class="sidebar-arrow">►</span>
-                        </div>
-                        <ul class="submenu hidden">
-                            <li><a href="#unidad12-a" class="submenu-link">a) Vicios de la Voluntad</a></li>
-                            <li><a href="#unidad12-b" class="submenu-link">b) Vicios Propios del Acto</a></li>
-                        </ul>
-                    </li>
-                    <!-- Unidad 13 -->
-                    <li>
-                        <div class="sidebar-collapsible">
-                            <a href="#unidad13">Unidad 13: Nulidades</a>
-                            <span class="sidebar-arrow">►</span>
-                        </div>
-                        <ul class="submenu hidden">
-                            <li><a href="#unidad13-a" class="submenu-link">a) Ineficacia / Inoponibilidad</a></li>
-                            <li><a href="#unidad13-b" class="submenu-link">b) Nulidad: Concepto</a></li>
-                            <li><a href="#unidad13-c" class="submenu-link">c) Clasificación</a></li>
-                            <li><a href="#unidad13-d" class="submenu-link">d) Efectos de la Nulidad</a></li>
-                            <li><a href="#unidad13-e" class="submenu-link">e) Vías de Invocación</a></li>
-                        </ul>
-                    </li>
-                    <!-- Unidad 14 -->
-                    <li>
-                        <div class="sidebar-collapsible">
-                            <a href="#unidad14">Unidad 14: Extinción</a>
-                            <span class="sidebar-arrow">►</span>
-                        </div>
-                        <ul class="submenu hidden">
-                            <li><a href="#unidad14-a" class="submenu-link">a) Confirmación</a></li>
-                            <li><a href="#unidad14-b" class="submenu-link">b) Ratificación</a></li>
-                            <li><a href="#unidad14-c" class="submenu-link">c) Extinción: Concepto</a></li>
-                            <li><a href="#unidad14-d" class="submenu-link">d) Hechos Extintivos</a></li>
-                            <li><a href="#unidad14-e" class="submenu-link">e) Actos Extintivos</a></li>
-                            <li><a href="#unidad14-f" class="submenu-link">f) Prescripción</a></li>
-                            <li><a href="#unidad14-g" class="submenu-link">g) Caducidad</a></li>
-                        </ul>
-                    </li>
-                    <!-- Unidad 9 -->
-                    <li>
-                        <div class="sidebar-collapsible">
-                            <a href="#unidad9">Unidad 9: Persona Jurídica</a>
-                            <span class="sidebar-arrow">►</span>
-                        </div>
-                        <ul class="submenu hidden">
-                            <li><a href="#unidad9-a" class="submenu-link">a) Concepto / Teorías</a></li>
-                            <li><a href="#unidad9-b" class="submenu-link">b) Constitución</a></li>
-                            <li><a href="#unidad9-c" class="submenu-link">c) Capacidad</a></li>
-                            <li><a href="#unidad9-d" class="submenu-link">d) Responsabilidad</a></li>
-                            <li><a href="#unidad9-e" class="submenu-link">e) Fin de la existencia</a></li>
-                        </ul>
-                    </li>
+                <ul class="space-y-2">
+                    <li><a href="#unidad10" class="sidebar-link">Unidad 10: Hechos y Actos</a></li>
+                    <li><a href="#unidad11" class="sidebar-link">Unidad 11: Formas</a></li>
+                    <li><a href="#unidad12" class="sidebar-link">Unidad 12: Defectos</a></li>
+                    <li><a href="#unidad13" class="sidebar-link">Unidad 13: Nulidades</a></li>
+                    <li><a href="#unidad14" class="sidebar-link">Unidad 14: Extinción</a></li>
+                    <li><a href="#unidad9" class="sidebar-link">Unidad 9: Persona Jurídica</a></li>
                 </ul>
             </nav>
         </aside>
 
-        <!-- ==== CONTENIDO PRINCIPAL (IDs AÑADIDOS A h3) ==== -->
+        <!-- ==== CONTENIDO PRINCIPAL ==== -->
         <main class="w-4/5 p-10">
 
-            <!-- ========= UNIDAD 10 ========= -->
+            <!-- ========= UNIDAD 10 (Rojo) ========= -->
             <section id="unidad10">
                 <h2 class="unit-10-color unit-10-border">Unidad 10: Hechos y Actos Jurídicos</h2>
                 
-                <h3 id="unidad10-esquema" class="unit-10-color">Esquema General de la Unidad</h3>
+                <h3 class="unit-10-color">Esquema General de la Unidad</h3>
                 <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 my-4">
-                    <!-- ... (contenido del esquema) ... -->
                     <ul class="list-none pl-0">
                         <li>
                             <span class="font-bold text-lg">HECHO JURÍDICO (Art. 257)</span>
@@ -276,11 +161,11 @@
                 </div>
 
                 <h3 id="unidad10-a" class="unit-10-color">a) Hecho y Hechos Jurídicos (Concepto y Clasificación)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <!-- ... (Contenido U10) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Función:</strong> Son el "disparador" que pone en marcha el sistema legal, creando, modificando o extinguiendo derechos y obligaciones.</p>
                     <p class="mb-2"><strong>Concepto (Art. 257 CCCN):</strong> "el acontecimiento que, conforme al ordenamiento jurídico, produce el nacimiento, modificación o extinción de relaciones o situaciones jurídicas".</p>
-                    <h4 class="mt-3 mb-1">Clasificación:</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Clasificación:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Según el agente:</strong>
                             <ul class="list-circle pl-6">
@@ -291,7 +176,7 @@
                         <li><strong>Según la voluntad:</strong> Involuntarios o Voluntarios.</li>
                         <li><strong>Según la ley:</strong> Lícitos o Ilícitos.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Diferencia con Acto Jurídico:</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Diferencia con Acto Jurídico:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Acto Jurídico (Fin Inmediato):</strong> Acto voluntario lícito con el <strong>fin inmediato</strong> de producir efectos jurídicos (ej. un testamento).</li>
                         <li><strong>Simple Acto Lícito (Sin Fin Inmediato):</strong> Acto voluntario lícito donde el autor no persigue un fin jurídico, pero la ley igual le asigna consecuencias (ej. escribir una novela y adquirir propiedad intelectual).</li>
@@ -299,28 +184,26 @@
                 </div>
 
                 <h3 id="unidad10-b" class="unit-10-color">b) Actos Voluntarios (Enumeración, El Silencio)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Art. 260 CCCN):</strong> "El acto voluntario es el ejecutado con discernimiento, intención y libertad, que se manifiesta por un hecho exterior".</p>
-                    <h4 class="mt-3 mb-1">Elementos Internos:</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Elementos Internos:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Discernimiento (Art. 261):</strong> Aptitud para comprender la naturaleza y consecuencias del acto.</li>
                         <li><strong>Intención:</strong> Propósito de realizar un acto concreto. (Vicios: Error, Dolo).</li>
                         <li><strong>Libertad:</strong> Posibilidad de elegir sin coacción. (Vicio: Violencia).</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Elemento Externo (Manifestación):</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Elemento Externo (Manifestación):</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Expresa (Art. 262):</strong> Oral, escrita, signos inequívocos.</li>
                         <li><strong>Tácita (Art. 264):</strong> Resulta de actos que permiten conocer la voluntad con certidumbre.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">El Silencio (Art. 263):</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">El Silencio (Art. 263):</h4>
                     <p><strong>Regla:</strong> No se considera manifestación de voluntad.</p>
                     <p><strong>Excepciones:</strong> Tiene valor cuando hay obligación de expedirse por (1) la ley, (2) la voluntad de las partes, o (3) los usos y prácticas.</p>
                 </div>
 
                 <h3 id="unidad10-c" class="unit-10-color">c) Imputación de consecuencias (Clasificación)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">Se utiliza la <strong>Teoría de la Causalidad Adecuada (Art. 1726 CCCN)</strong>. Solo se imputan las consecuencias previsibles según el curso normal de las cosas.</p>
                     <p class="mb-2"><strong>Clasificación (Art. 1727 CCCN):</strong></p>
                     <ul class="list-disc pl-6 space-y-1">
@@ -331,14 +214,13 @@
                 </div>
 
                 <h3 id="unidad10-d" class="unit-10-color">d) Hechos Involuntarios y Actos Ilícitos (Delitos, Cuasidelitos)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
-                    <h4 class="mt-3 mb-1">Hechos Involuntarios (Art. 261):</h4>
+                <div class="content-box">
+                    <h4 class="mt-3 mb-1 unit-10-color">Hechos Involuntarios (Art. 261):</h4>
                     <p class="mb-2">Realizados sin discernimiento (ej. minoridad, privación de la razón).</p>
                     <p class="mb-2"><strong>Regla:</strong> No generan responsabilidad (Art. 260).</p>
                     <p class="mb-2"><strong>Excepción (Art. 1750 CCCN):</strong> El juez puede imponer una reparación por <strong>razones de equidad</strong> (considerando el patrimonio del autor y la situación de la víctima) o si hubo <strong>Enriquecimiento sin Causa</strong>.</p>
                     
-                    <h4 class="mt-3 mb-1">Actos Ilícitos (Antijuridicidad - Art. 1717):</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Actos Ilícitos (Antijuridicidad - Art. 1717):</h4>
                     <p class="mb-2">"cualquier acción u omisión que causa un daño a otro es antijurídica si no está justificada".</p>
                     <p class="mb-2"><strong>Diferencia Dolo y Culpa (Art. 1724 CCCN):</strong></p>
                     <ul class="list-disc pl-6 space-y-1">
@@ -348,10 +230,9 @@
                 </div>
 
                 <h3 id="unidad10-e" class="unit-10-color">e) Acto Jurídico: Caracteres y Elementos Esenciales</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Art. 259 CCCN):</strong> "el acto voluntario lícito que tiene por fin inmediato la adquisición, modificación o extinción de relaciones o situaciones jurídicas".</p>
-                    <h4 class="mt-3 mb-1">Elementos Esenciales (Estructurales):</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Elementos Esenciales (Estructurales):</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Sujeto:</strong> La persona (humana o jurídica). Debe tener <strong>Capacidad</strong> (de Derecho y de Ejercicio) para que el acto sea válido.</li>
                         <li><strong>Objeto (Art. 279):</strong> El contenido (hechos o bienes). Debe ser:
@@ -373,37 +254,57 @@
                 </div>
                 
                 <h3 id="unidad10-f" class="unit-10-color">f) Modalidades (Plazo, Condición y Cargo)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
-                    <p class="mb-2">Son cláusulas accesorias que alteran los efectos normales del acto.</p>
+                <div class="content-box">
+                    <p class="mb-2">Son cláusulas accesorias que se incorporan a un acto jurídico para alterar o modificar sus efectos normales. Las modalidades no afectan la validez del acto, sino su eficacia o exigibilidad. Las principales son:</p>
+                    
+                    <h4 class="mt-4 mb-1 unit-10-color">1. Condición (Art. 343 CCCN)</h4>
+                    <p class="mb-2"><strong>Definición (Art. 343):</strong> Es la cláusula por la cual las partes sujetan la <strong>plena eficacia o la resolución</strong> de un acto a un hecho <strong>futuro e incierto</strong>.</p>
                     <ul class="list-disc pl-6 space-y-1">
-                        <li><strong>Condición:</strong> Sujeta el efecto a un hecho <strong>futuro e incierto</strong>.
+                        <li><strong>Condición Suspensiva:</strong> Se suspende la *adquisición* o *eficacia* del derecho hasta que ocurra el hecho. El acto no produce sus efectos plenamente hasta que la condición se cumple.
                             <ul class="list-circle pl-6">
-                                <li><strong>Suspensiva:</strong> El derecho nace si ocurre (ej. "te regalo el auto si te recibes").</li>
-                                <li><strong>Resolutoria:</strong> El derecho se extingue si ocurre (ej. "te cedo el depto hasta que te cases").</li>
+                                <li><strong>Ejemplo:</strong> "Te regalaré un auto si te recibes de abogado". (El derecho a reclamar el auto nace solo al recibirse).</li>
                             </ul>
                         </li>
-                        <li><strong>Plazo:</strong> Sujeta el efecto a un hecho <strong>futuro y cierto</strong>.
+                        <li><strong>Condición Resolutoria:</strong> El acto es plenamente eficaz desde el inicio, pero se extingue o *resuelve* (pierde sus efectos) si ocurre el hecho futuro e incierto.
+                            <ul class="list-circle pl-6">
+                                <li><strong>Ejemplo:</strong> "Te cedo el uso de mi departamento hasta que te cases". (El derecho se tiene, pero se extingue al casarse).</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4 class="mt-4 mb-1 unit-10-color">2. Plazo (Art. 350 CCCN)</h4>
+                    <p class="mb-2"><strong>Definición (Art. 350):</strong> Es la cláusula que sujeta la <strong>exigibilidad o la extinción</strong> de un acto a un hecho <strong>futuro y cierto</strong> (que fatalmente ocurrirá, aunque no se sepa cuándo).</p>
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li><strong>Plazo Suspensivo:</strong> Difiere la *exigibilidad* del derecho. El derecho existe, pero no se puede reclamar hasta el vencimiento del plazo.
                              <ul class="list-circle pl-6">
-                                <li><strong>Suspensivo:</strong> La exigibilidad nace al vencimiento (ej. "te pagaré el 15 de diciembre").</li>
-                                <li><strong>Resolutorio:</strong> El derecho se extingue al vencimiento (ej. "renta por 5 años").</li>
+                                <li><strong>Ejemplo:</strong> "Te pagaré $100.000 el 15 de diciembre". (La deuda ya existe, pero solo es exigible en esa fecha).</li>
                             </ul>
                         </li>
-                        <li><strong>Cargo:</strong> Una obligación accesoria impuesta al adquirente de un derecho a título gratuito (ej. "te dono la casa con el cargo de que pongas una biblioteca"). Su incumplimiento no extingue el derecho, pero se puede exigir judicialmente.</li>
+                        <li><strong>Plazo Resolutorio:</strong> Limita la duración del derecho, provocando su *extinción* al vencimiento.
+                             <ul class="list-circle pl-6">
+                                <li><strong>Ejemplo:</strong> "Te daré una renta mensual por cinco años". (El derecho se extingue al cumplirse ese tiempo).</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4 class="mt-4 mb-1 unit-10-color">3. Cargo (Art. 354 CCCN)</h4>
+                    <p class="mb-2"><strong>Definición (Art. 354):</strong> Es una <strong>obligación accesoria</strong> impuesta al adquirente de un derecho. Es común en actos a título gratuito (donaciones, legados).</p>
+                    <p class="mb-2"><strong>Diferencia clave (Art. 357):</strong> A diferencia de la condición, el incumplimiento del cargo <strong>no impide la adquisición del derecho ni produce su extinción</strong>, salvo que se haya pactado expresamente como una condición (suspensiva o resolutoria). El cargo se puede exigir judicialmente.</p>
+                    <ul class="list-disc pl-6 space-y-1">
+                        <li><strong>Ejemplo:</strong> "Te dono mi casa con el cargo de que instales en ella una biblioteca pública". (Adquieres la casa de inmediato, pero si no cumples el cargo, te pueden demandar para que lo cumplas).</li>
                     </ul>
                 </div>
                 
                 <h3 id="unidad10-g" class="unit-10-color">g) Efectos e Interpretación</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
-                    <h4 class="mt-3 mb-1">Efectos del Acto Jurídico</h4>
+                <div class="content-box">
+                    <h4 class="mt-3 mb-1 unit-10-color">Efectos del Acto Jurídico</h4>
                     <p class="mb-2"><strong>Principio de Efecto Relativo (Art. 1021 CCCN):</strong> El contrato solo tiene efecto entre las <strong>Partes</strong>. No puede perjudicar ni beneficiar a <strong>Terceros</strong>.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Partes:</strong> El acto es ley para ellas (Art. 959).</li>
                         <li><strong>Sucesores Universales (Herederos):</strong> Se los asimila a las partes (Art. 1024), salvo en obligaciones <i>intuitu personae</i>.</li>
                         <li><strong>Terceros:</strong> No son alcanzados por los efectos, pero el acto les es <strong>oponible</strong> (deben respetar la situación creada).</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Interpretación de los Actos Jurídicos (Arts. 1061-1068):</h4>
+                    <h4 class="mt-3 mb-1 unit-10-color">Interpretación de los Actos Jurídicos (Arts. 1061-1068):</h4>
                     <p class="mb-2">Desentrañar el sentido y alcance de la voluntad.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Intención Común (Art. 1061):</strong> Buscar la intención de las partes, más allá de lo literal.</li>
@@ -415,16 +316,73 @@
                 </div>
             </section>
 
-            <!-- ========= UNIDAD 11 ========= -->
+            <!-- ========= UNIDAD 11 (Azul) ========= -->
             <section id="unidad11">
                 <h2 class="unit-11-color unit-11-border">Unidad 11: Formas de los Actos Jurídicos</h2>
                 
+                <h3 class="unit-11-color">Esquema General de la Unidad</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 my-4">
+                    <ul class="list-none pl-0">
+                        <li>
+                            <span class="font-bold text-lg">FORMA (Exteriorización de la Voluntad)</span>
+                            <ul class="list-none pl-5 mt-2 border-l-2 border-green-300">
+                                <li><span class="font-semibold">1. Principio: Libertad de Formas (Art. 284)</span></li>
+                                <li class="mt-1"><span class="font-semibold">2. Clasificación (Art. 285)</span>
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) No Formales</span> (Regla general, ej. comprar libro)</li>
+                                        <li class="mt-1"><span class="font-medium">b) Formales</span> (Ley exige forma)
+                                            <ul class="list-none pl-5 mt-2 border-l-2 border-yellow-400">
+                                                <li><span class="text-yellow-800"><b>Ad Probationem</b> (No Solemnes)</span>
+                                                    <ul class="list-disc pl-5 text-sm">
+                                                        <li><b>Fin:</b> Probar el acto.</li>
+                                                        <li><b>Efecto:</b> Acto válido, pero difícil de probar (ej. locación verbal).</li>
+                                                    </ul>
+                                                </li>
+                                                <li class="mt-2"><span class="text-yellow-800"><b>Ad Solemnitatem</b> (Solemnes)</span>
+                                                    <ul class="list-disc pl-5 text-sm">
+                                                        <li><b>Fin:</b> Validez del acto.</li>
+                                                        <li><b>Relativa:</b> Incumplimiento genera "Obligación de Hacer" (ej. Boleto Compraventa).</li>
+                                                        <li><b>Absoluta:</b> Incumplimiento = NULIDAD (ej. Donación de Inmueble).</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">3. Instrumentos (Prueba) (Art. 286)</span>
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) Públicos (Art. 289)</span> (con Oficial Público)
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Fuerza Probatoria: <b>Plena Fe</b> (Art. 296).</li>
+                                                <li>Impugnación: Redargución de Falsedad.</li>
+                                                <li>Especie: Escritura Pública (Protocolo, Matriz, Copias).</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">b) Particulares</span> (sin Oficial Público)
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li><b>No Firmados</b> (Tickets, emails).</li>
+                                                <li><b>Firmados (Privados)</b>
+                                                    <ul class="list-circle pl-5">
+                                                        <li>Requisito: <b>Firma</b> (Art. 313) (Digital, a ruego, en blanco).</li>
+                                                        <li>Prueba entre Partes: <b>Reconocimiento de Firma</b> (Art. 314).</li>
+                                                        <li>Efectos vs. Terceros: <b>Fecha Cierta</b> (Art. 317).</li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
                 <h3 id="unidad11-a" class="unit-11-color">a) Forma: Concepto y Clasificación</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <!-- ... (Contenido U11) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto:</strong> Conjunto de solemnidades o prescripciones externas para exteriorizar la voluntad (el "ropaje" del acto).</p>
                     <p class="mb-2"><strong>Principio (Art. 284 CCCN):</strong> Libertad de Formas. Las partes eligen la forma si la ley no impone una (ej. préstamo verbal).</p>
-                    <h4 class="mt-3 mb-1">Clasificación (Art. 285 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-11-color">Clasificación (Art. 285 CCCN):</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Actos No Formales:</strong> La validez no depende de solemnidad. Es la regla general (ej. compra de un libro).</li>
                         <li><strong>Actos Formales:</strong> La ley exige una forma determinada.
@@ -442,13 +400,12 @@
                 </div>
 
                 <h3 id="unidad11-b" class="unit-11-color">b) Instrumentos Públicos</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto:</strong> Otorgados con intervención de un oficial público (Escribano, Juez, Func. Registro Civil). Gozan de fe pública.</p>
                     <p class="mb-2"><strong>Enumeración (Art. 289):</strong> a) Escrituras públicas y copias, b) Instrumentos de escribanos/funcionarios, c) Títulos emitidos por el Estado.</p>
                     <p class="mb-2"><strong>Requisitos de Validez (Art. 290):</strong> a) Actuación del oficial público, b) Competencia territorial, c) Firmas (oficial, partes, testigos si hay).</p>
                     <p class="mb-2"><strong>Fuerza Probatoria (Art. 296):</strong> Hacen <strong>PLENA FE</strong> sobre: fecha, lugar, hechos ante el oficial y declaraciones de las partes.</p>
-                    <h4 class="mt-3 mb-1">Impugnación:</h4>
+                    <h4 class="mt-3 mb-1 unit-11-color">Impugnación:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Nulidad:</strong> Si faltan requisitos (ej. firma escribano). Puede "convertirse" en inst. privado si está firmado por partes (Art. 294).</li>
                         <li><strong>Falsedad (Material o Ideológica):</strong>
@@ -461,8 +418,7 @@
                 </div>
 
                 <h3 id="unidad11-c" class="unit-11-color">c) Escrituras Públicas</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">Es la especie más importante de instrumento público, otorgada exclusivamente por Escribano Público.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Protocolo (Art. 299):</strong> Libro oficial (folios móviles) donde el escribano asienta cronológicamente las escrituras matrices (originales).</li>
@@ -473,8 +429,7 @@
                 </div>
 
                 <h3 id="unidad11-d" class="unit-11-color">d) Instrumentos Privados</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">Son los que las partes otorgan sin intervención de un oficial público. Se dividen en:</p>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Firmados (Instrumentos Privados):</strong> Su requisito esencial es la <strong>Firma</strong>.</li>
@@ -485,8 +440,7 @@
                 </div>
                 
                 <h3 id="unidad11-e" class="unit-11-color">e) Firma (Digital, Electrónica, A Ruego, En Blanco)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Art. 288 CCCN):</strong> Trazo habitual de una persona que demuestra la autoría y su conformidad con el contenido del documento.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Firma Digital (Ley 25.506):</strong> Basada en criptografía y un certificado de autoridad licenciada. Garantiza autoría e integridad. <strong>Misma validez que la firma manuscrita.</strong></li>
@@ -497,16 +451,15 @@
                 </div>
 
                 <h3 id="unidad11-f" class="unit-11-color">f) Fuerza Probatoria y Oponibilidad</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
-                    <h4 class="mt-3 mb-1">Fuerza Probatoria (Entre Partes) - Art. 314</h4>
+                <div class="content-box">
+                    <h4 class="mt-3 mb-1 unit-11-color">Fuerza Probatoria (Entre Partes) - Art. 314</h4>
                     <p class="mb-2">El instrumento privado no prueba nada por sí mismo. Adquiere valor probatorio pleno solo cuando la <strong>firma es reconocida</strong> (voluntariamente o por pericia caligráfica).</p>
                     
-                    <h4 class="mt-3 mb-1">Oponibilidad (A Terceros) - Art. 317</h4>
+                    <h4 class="mt-3 mb-1 unit-11-color">Oponibilidad (A Terceros) - Art. 317</h4>
                     <p class="mb-2">Para que la fecha del instrumento tenga efectos contra terceros, debe adquirir <strong>Fecha Cierta</strong>. Esto ocurre cuando sucede un hecho que demuestra que no pudo ser firmado después.</p>
                     <p class="mb-2"><strong>Ejemplos de Fecha Cierta:</strong> El día que se presenta en juicio o repartición pública, el día que fallece el firmante, o (el más usual) el día que un escribano certifica la firma.</p>
                     
-                    <h4 class="mt-3 mb-1">Otros Conceptos:</h4>
+                    <h4 class="mt-3 mb-1 unit-11-color">Otros Conceptos:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Doble Ejemplar:</strong> El CCCN <strong>suprimió</strong> este requisito. Ya no es necesario que los contratos bilaterales se hagan en tantos ejemplares como partes haya.</li>
                         <li><strong>Cartas Misivas (Art. 318):</strong> Son instrumentos privados. Tienen valor probatorio pleno entre remitente y destinatario. Son confidenciales.</li>
@@ -514,13 +467,72 @@
                 </div>
             </section>
 
-            <!-- ========= UNIDAD 12 ========= -->
+            <!-- ========= UNIDAD 12 (Ámbar) ========= -->
             <section id="unidad12">
                 <h2 class="unit-12-color unit-12-border">Unidad 12: Defectos de los Actos Jurídicos</h2>
                 
+                <h3 class="unit-12-color">Esquema General de la Unidad</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 my-4">
+                    <ul class="list-none pl-0">
+                        <li>
+                            <span class="font-bold text-lg">DEFECTOS DEL ACTO JURÍDICO</span>
+                            <ul class="list-none pl-5 mt-2 border-l-2 border-red-300">
+                                <li><span class="font-semibold">1. Vicios de la Voluntad</span> (Afectan Elementos Internos)
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) Error (Art. 267)</span> (Afecta Intención)
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Debe ser de Hecho, Esencial y Excusable (Art. 266).</li>
+                                                <li>Error de Derecho (Art. 8) no es vicio.</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">b) Dolo (Art. 271)</span> (Afecta Intención)
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Engaño. Debe ser Grave y Determinante.</li>
+                                                <li><b>Dolo Esencial (Art. 272):</b> Causa Nulidad + Daños.</li>
+                                                <li><b>Dolo Incidental (Art. 273):</b> Solo Daños.</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">c) Violencia (Art. 276)</span> (Afecta Libertad)
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Fuerza Irresistible (física).</li>
+                                                <li>Intimidación (amenazas).</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">2. Vicios Propios del Acto Jurídico</span> (Afectan Buena Fe / Equidad)
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) Lesión (Art. 332)</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Elemento Objetivo: Desproporción evidente.</li>
+                                                <li>Elemento Subjetivo: Aprovechamiento (de necesidad, inexperiencia).</li>
+                                                <li>Efecto: Nulidad o Reajuste.</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">b) Simulación (Art. 333)</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Acto ficticio (Absoluta) o que oculta otro (Relativa).</li>
+                                                <li>Prueba clave: Contradocumento.</li>
+                                                <li>Efecto: Nulidad.</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">c) Fraude (Art. 338)</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Acto real para insolventarse.</li>
+                                                <li>Acción Pauliana o Revocatoria.</li>
+                                                <li>Efecto: <b>Inoponibilidad</b> (solo para el acreedor que acciona).</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
                 <h3 id="unidad12-a" class="unit-12-color">a) Vicios de la Voluntad (Error, Dolo, Violencia)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <!-- ... (Contenido U12) ... -->
+                <div class="content-box">
                     <p class="mb-2">Son defectos que impactan los elementos internos del acto voluntario: el discernimiento, la intención y la libertad. Ocurren en la psiquis de la persona en el momento de celebrar el acto, impidiendo que su voluntad se forme de manera sana y libre.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Error:</strong> Afecta la <strong>intención</strong>. La persona tiene un falso conocimiento.</li>
@@ -530,11 +542,10 @@
                 </div>
                 
                 <h4 class="unit-12-color">Ignorancia y Error</h4>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto:</strong> Jurídicamente se tratan igual. La <strong>Ignorancia</strong> es la ausencia total de conocimiento, y el <strong>Error</strong> es tener un conocimiento falso.</p>
                     <p class="mb-2">Para que el error anule el acto, debe ser de <strong>Hecho</strong>, <strong>Esencial</strong> y <strong>Excusable</strong>.</p>
-                    <h4 class="mt-3 mb-1">Error Esencial (Art. 267 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Error Esencial (Art. 267 CCCN):</h4>
                     <p class="mb-2">Es aquel sobre un elemento tan importante que, de haberlo conocido, la persona no habría celebrado el acto. Supuestos:</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Sobre la naturaleza del acto:</strong> Crees que es donación, pero es venta.</li>
@@ -543,39 +554,37 @@
                         <li><strong>Sobre los motivos personales:</strong> Solo si fueron expresados y esenciales para ambas partes.</li>
                         <li><strong>Sobre la persona:</strong> Cuando la identidad o cualidad es determinante (ej. contratas a un cirujano específico).</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Error Accidental:</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Error Accidental:</h4>
                     <p class="mb-2">Recae sobre elementos secundarios. No afecta la validez (ej. compras un libro creyendo que era la 3ra edición y es la 2da).</p>
-                    <h4 class="mt-3 mb-1">Error Excusable (Art. 266 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Error Excusable (Art. 266 CCCN):</h4>
                     <p class="mb-2">Para que el error sea relevante, la persona debe haber actuado con la debida diligencia. Si el error se debe a una negligencia culpable (ej. no revisar un auto usado con un mecánico), es <strong>inexcusable</strong> y no anula el acto.</p>
-                    <h4 class="mt-3 mb-1">Error de Derecho (Art. 8 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Error de Derecho (Art. 8 CCCN):</h4>
                     <p class="mb-2">"La ignorancia de las leyes no sirve de excusa...". No se puede invocar el desconocimiento de la ley para anular un acto, por razones de orden público.</p>
                 </div>
                 
                 <h4 class="unit-12-color">Dolo</h4>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto como Vicio (Art. 271 CCCN):</strong> "toda aserción de lo que es falso o disimulación de lo verdadero, cualquier artificio, astucia o maquinación que se emplee para la celebración del acto". Incluye la <strong>acción</strong> (mentir) y la <strong>omisión dolosa</strong> (callar la verdad cuando hay deber de informar).</p>
-                    <h4 class="mt-3 mb-1">Requisitos para la Nulidad (Dolo Esencial):</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Requisitos para la Nulidad (Dolo Esencial):</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Grave:</strong> Idóneo para engañar a una persona prudente (no incluye la astucia comercial o <i>dolus bonus</i>).</li>
                         <li><strong>Determinante del consentimiento:</strong> La víctima no habría celebrado el acto de saber la verdad.</li>
                         <li><strong>Que cause un daño importante.</strong></li>
-                        <li><strong>Que no haya dolo recíproco:</strong> Si ambos se engañaron, la ley no protege a ninguno.</li>
+                        <li><strong>Que no haya dolo recíproco:</strong> Si ambas se engañaron, la ley no protege a ninguno.</li>
                     </ul>
-                     <h4 class="mt-3 mb-1">Especies de Dolo:</h4>
+                     <h4 class="mt-3 mb-1 unit-12-color">Especies de Dolo:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Dolo Esencial (o Principal) (Art. 272):</strong> Reúne los requisitos. <strong>Efecto:</strong> Nulidad del acto + indemnización por daños.</li>
                         <li><strong>Dolo Incidental (Art. 273):</strong> Engaño no determinante. La víctima hubiera contratado igual, pero en otras condiciones. <strong>Efecto:</strong> No hay nulidad, pero sí indemnización por daños.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Dolo de un Tercero (Art. 274):</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Dolo de un Tercero (Art. 274):</h4>
                     <p class="mb-2">También causa la nulidad. Si la parte beneficiada conocía el engaño, ambos responden solidariamente por los daños.</p>
                 </div>
                 
                 <h4 class="unit-12-color">Fuerza e Intimidación (Violencia)</h4>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Art. 276 CCCN):</strong> La <strong>fuerza irresistible</strong> (violencia física, ej. llevar la mano para firmar) y las <strong>amenazas</strong> (intimidación o violencia moral) anulan el acto.</p>
-                     <h4 class="mt-3 mb-1">Requisitos de la Intimidación:</h4>
+                     <h4 class="mt-3 mb-1 unit-12-color">Requisitos de la Intimidación:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Amenaza Injusta:</strong> Amenazar con ejercer un derecho (ej. "te embargo") no vicia el acto, salvo que se use para obtener una ventaja desproporcionada.</li>
                         <li><strong>Mal Inminente y Grave:</strong> El daño debe ser próximo, inevitable y significativo (sobre persona, honor, bienes, etc.).</li>
@@ -587,16 +596,14 @@
                 </div>
 
                 <h3 id="unidad12-b" class="unit-12-color">b) Vicios Propios del Acto Jurídico (Lesión, Simulación, Fraude)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                     <!-- ... (contenido) ... -->
+                <div class="content-box">
                      <p class="mb-2">Son defectos que afectan la <strong>buena fe</strong>, la <strong>equidad</strong> o la <strong>sinceridad</strong> del negocio, más allá de la voluntad interna de los celebrantes.</p>
                 </div>
 
                 <h4 class="unit-12-color">Lesión</h4>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Lesión Objetivo-Subjetiva):</strong> Vicio que se da cuando una parte, aprovechándose de la <strong>necesidad, debilidad síquica o inexperiencia</strong> de la otra, obtiene una <strong>ventaja patrimonial evidentemente desproporcionada</strong> y sin justificación.</p>
-                     <h4 class="mt-3 mb-1">Requisitos (Art. 332 CCCN):</h4>
+                     <h4 class="mt-3 mb-1 unit-12-color">Requisitos (Art. 332 CCCN):</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Elemento Objetivo:</strong> Ventaja desproporcionada.</li>
                         <li><strong>Elemento Subjetivo de la Víctima:</strong> Necesidad, debilidad síquica o inexperiencia.</li>
@@ -607,17 +614,16 @@
                 </div>
                 
                 <h4 class="unit-12-color">Simulación</h4>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Arts. 333-337):</strong> Vicio que consiste en encubrir el carácter jurídico de un acto bajo la apariencia de otro, o cuando el acto es total o parcialmente ficticio.</p>
-                    <h4 class="mt-3 mb-1">Clasificación:</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Clasificación:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Lícita:</strong> No perjudica a terceros ni viola la ley.</li>
                         <li><strong>Ilícita:</strong> Perjudica a terceros o viola la ley.</li>
                         <li><strong>Absoluta:</strong> El acto es una ficción total (ej. simular vender una casa para escapar de acreedores).</li>
                         <li><strong>Relativa:</strong> Se celebra un acto aparente para ocultar uno real (ej. simular una venta para encubrir una donación).</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Acción y Prueba:</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Acción y Prueba:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Entre las partes:</strong> La prueba clave es el <strong>contradocumento</strong> (escrito secreto que dice la verdad).</li>
                         <li><strong>Por terceros (perjudicados):</strong> Pueden usar cualquier medio, siendo clave las <strong>presunciones</strong> (parentesco, precio vil, el vendedor sigue viviendo en el inmueble, etc.).</li>
@@ -626,20 +632,19 @@
                 </div>
 
                 <h4 class="unit-12-color">Fraude</h4>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                     <!-- ... (contenido) ... -->
+                <div class="content-box">
                      <p class="mb-2"><strong>Concepto:</strong> Actos de disposición que realiza un deudor para provocar o agravar su insolvencia, perjudicando a sus acreedores.</p>
                      <p class="mb-2"><strong>Acción Revocatoria o Pauliana (Arts. 338-342):</strong> Es la acción que la ley da a los acreedores para atacar esos actos.</p>
-                     <h4 class="mt-3 mb-1">Requisitos:</h4>
+                     <h4 class="mt-3 mb-1 unit-12-color">Requisitos:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li>Que el crédito sea de causa anterior al acto.</li>
                         <li>Que el acto haya causado o agravado la insolvencia del deudor.</li>
                         <li><strong>Si el acto fue Oneroso:</strong> Se requiere que el co-contratante conociera o debiera conocer la insolvencia.</li>
                         <li><strong>Si el acto fue Gratuito (ej. donación):</strong> No se requiere nada más, el acto se revoca.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Efectos:</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Efectos:</h4>
                      <p class="mb-2">El efecto <strong>NO es la Nulidad</strong>. Es la <strong>INOPONIBILIDAD</strong>. El acto es válido, pero el acreedor que accionó puede ejecutar el bien en manos del adquirente (hasta el monto de su crédito).</p>
-                    <h4 class="mt-3 mb-1">Diferencia con Simulación:</h4>
+                    <h4 class="mt-3 mb-1 unit-12-color">Diferencia con Simulación:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Simulación:</strong> Acto Ficticio. Efecto: Nulidad (beneficia a todos).</li>
                         <li><strong>Fraude:</strong> Acto Real. Efecto: Inoponibilidad (beneficia solo al acreedor que accionó).</li>
@@ -647,15 +652,65 @@
                 </div>
             </section>
             
-            <!-- ========= UNIDAD 13 ========= -->
+            <!-- ========= UNIDAD 13 (Púrpura) ========= -->
             <section id="unidad13">
                 <h2 class="unit-13-color unit-13-border">Unidad 13: Nulidades de los Actos Jurídicos</h2>
 
+                <h3 class="unit-13-color">Esquema General de la Unidad</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 my-4">
+                    <ul class="list-none pl-0">
+                        <li>
+                            <span class="font-bold text-lg">INEFICACIA (Género)</span>
+                            <ul class="list-none pl-5 mt-2 border-l-2 border-purple-300">
+                                <li><span class="font-semibold">1. Estructural (Originaria)</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li><b>NULIDAD</b> (Vicio en el nacimiento).</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">2. Funcional (Sobreviniente)</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li>Acto nace válido, pero se extingue por:</li>
+                                        <li><b>Resolución</b> (incumplimiento, condición).</li>
+                                        <li><b>Rescisión</b> (mutuo acuerdo).</li>
+                                        <li><b>Revocación</b> (causa legal, ej. ingratitud).</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">3. Inoponibilidad</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li>Acto válido entre partes, pero ineficaz vs. 3ros (ej. Fraude, Fecha Cierta).</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">NULIDAD (Especie)</span>
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) Clasificación Principal</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li><b>Absoluta (Art. 387):</b> Orden Público. De Oficio. Imprescriptible. Inconfirmable.</li>
+                                                <li><b>Relativa (Art. 388):</b> Interés Privado. A Pedido. Prescribe. Confirmable.</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">b) Otra Clasificación</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li><b>Total vs. Parcial (Art. 389)</b> (Principio de Conservación).</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">c) Efectos (Art. 390)</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li><b>Entre Partes:</b> Retroactividad (Restitución).</li>
+                                                <li><b>Respecto 3ros:</b> Se propaga, SALVO 3ro adquirente de Buena Fe y Título Oneroso (Art. 392).</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
                 <h3 id="unidad13-a" class="unit-13-color">a) Ineficacia e Inoponibilidad</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <!-- ... (Contenido U13) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Ineficacia (Género):</strong> Un acto es "ineficaz" cuando no produce sus efectos propios (los buscados por las partes). La nulidad es una especie.</p>
-                    <h4 class="mt-3 mb-1">Clasificación de Ineficacia:</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Clasificación de Ineficacia:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Estructural (Originaria):</strong> El vicio está en el momento de la celebración (afecta elementos esenciales). <strong>Ejemplo: Nulidad.</strong></li>
                         <li><strong>Funcional (Sobreviniente):</strong> El acto nace válido, pero un hecho posterior lo torna ineficaz.
@@ -667,7 +722,7 @@
                         </li>
                     </ul>
 
-                    <h4 class="mt-3 mb-1">Inoponibilidad:</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Inoponibilidad:</h4>
                     <p class="mb-2">Es un supuesto de ineficacia por el cual un acto jurídico <strong>válido entre las partes</strong>, no produce sus efectos (es ineficaz) respecto de <strong>ciertos terceros</strong> protegidos por la ley.</p>
                     <p class="mb-2"><strong>Diferencia clave:</strong> El acto nulo es inválido para todos (erga omnes). El acto inoponible es válido entre las partes, pero no se puede "hacer valer" o "imponer" contra los terceros que la ley protege.</p>
                     <ul class="list-disc pl-6 space-y-1">
@@ -676,26 +731,24 @@
                 </div>
 
                 <h3 id="unidad13-b" class="unit-13-color">b) Nulidad: Concepto y Caracteres</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto:</strong> Es la sanción legal que priva a un acto jurídico de sus efectos propios (los buscados por las partes) en virtud de un vicio o defecto originario (existente en el momento de su celebración).</p>
                     <p class="mb-2"><strong>Fundamento:</strong> Proteger el orden público, la moral, las buenas costumbres o los derechos de las personas.</p>
-                    <h4 class="mt-3 mb-1">Caracteres:</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Caracteres:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Es una sanción legal:</strong> Solo la ley puede establecerla.</li>
                         <li><strong>Priva de los efectos propios:</strong> No de otros (ej. indemnizar).</li>
                         <li><strong>Es de origen:</strong> El vicio debe existir en el nacimiento del acto.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Nulidades Implícitas o Virtuales:</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Nulidades Implícitas o Virtuales:</h4>
                     <p class="mb-2">No es necesario que la ley use la palabra "nulo". Una nulidad es virtual cuando surge inequívocamente del contenido de una norma imperativa (una prohibición). El <strong>Art. 386 CCCN</strong> adopta esta postura.</p>
                 </div>
                 
                 <h3 id="unidad13-c" class="unit-13-color">c) Clasificación de Nulidades</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">El CCCN eliminó la distinción entre "nulos" y "anulables". La clasificación principal se basa en el interés protegido:</p>
                     
-                    <h4 class="mt-3 mb-1">1. Nulidad Absoluta (Art. 386-387 CCCN)</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">1. Nulidad Absoluta (Art. 386-387 CCCN)</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Interés:</strong> Protege el <strong>orden público</strong>, la moral o las buenas costumbres.</li>
                         <li><strong>Declaración:</strong> Puede ser declarada por el juez <strong>de oficio</strong>.</li>
@@ -705,7 +758,7 @@
                         <li><strong>Ejemplo:</strong> Acto con objeto ilícito (vender estupefacientes).</li>
                     </ul>
 
-                    <h4 class="mt-3 mb-1">2. Nulidad Relativa (Art. 388 CCCN)</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">2. Nulidad Relativa (Art. 388 CCCN)</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Interés:</strong> Protege el <strong>interés privado</strong> de ciertas personas (ej. víctima de vicio, incapaz).</li>
                         <li><strong>Declaración:</strong> <strong>No</strong> puede ser declarada de oficio.</li>
@@ -715,7 +768,7 @@
                         <li><strong>Ejemplo:</strong> Venta realizada mediante dolo, violencia o lesión.</li>
                     </ul>
 
-                    <h4 class="mt-3 mb-1">3. Nulidad Total y Parcial (Art. 389 CCCN)</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">3. Nulidad Total y Parcial (Art. 389 CCCN)</h4>
                     <p class="mb-2">Se basa en la extensión de la sanción.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Nulidad Total:</strong> El vicio invalida todo el acto.</li>
@@ -725,16 +778,15 @@
                 </div>
 
                 <h3 id="unidad13-d" class="unit-13-color">d) Efectos de la Nulidad (Entre partes y 3ros)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Efecto Principal (Art. 390 CCCN):</strong> <strong>Retroactividad</strong>. Vuelve las cosas al mismo estado en que se hallaban antes del acto anulado.</p>
-                    <h4 class="mt-3 mb-1">Efectos entre las Partes:</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Efectos entre las Partes:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Obligación de Restituir (Art. 390):</strong> Deben devolverse mutuamente lo recibido.</li>
                         <li><strong>Daños y Perjuicios:</strong> Si hubo culpa o dolo, la parte culpable debe indemnizar.</li>
                         <li><strong>Privilegio de los Incapaces:</strong> La parte capaz no puede exigir la restitución, salvo que pruebe que lo dado subsiste en el patrimonio del incapaz o fue en su provecho.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Efectos respecto de Terceros (Art. 392 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Efectos respecto de Terceros (Art. 392 CCCN):</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Principio:</strong> La nulidad se propaga a los terceros (ej. Si A vende a B (nulo) y B vende a C, la nulidad "arrastra" a C).</li>
                         <li><strong>EXCEPCIÓN CLAVE:</strong> La nulidad <strong>no</strong> puede oponerse contra <strong>terceros adquirentes de buena fe y a título oneroso</strong>. (Para dar seguridad jurídica).</li>
@@ -742,19 +794,18 @@
                 </div>
                 
                 <h3 id="unidad13-e" class="unit-13-color">e) Vías de Invocación (Acción y Excepción)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
-                    <h4 class="mt-3 mb-1">Vías de Invocación (Art. 383 CCCN):</h4>
+                <div class="content-box">
+                    <h4 class="mt-3 mb-1 unit-13-color">Vías de Invocación (Art. 383 CCCN):</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Vía de Acción:</strong> La parte interesada toma la iniciativa e inicia un juicio para anular el acto.</li>
                         <li><strong>Vía de Excepción:</strong> La parte se defiende oponiendo la nulidad cuando le exigen el cumplimiento de un acto viciado.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Legitimados (Quiénes pueden pedirla):</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Legitimados (Quiénes pueden pedirla):</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Nulidad Absoluta (Art. 387):</strong> Cualquier interesado, el Ministerio Público, o el juez de oficio.</li>
                         <li><strong>Nulidad Relativa (Art. 388):</strong> Únicamente la parte en cuyo beneficio se estableció.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Prescripción:</h4>
+                    <h4 class="mt-3 mb-1 unit-13-color">Prescripción:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Nulidad Absoluta:</strong> La acción es <strong>imprescriptible</strong>.</li>
                         <li><strong>Nulidad Relativa:</strong> La acción <strong>prescribe</strong>.
@@ -767,48 +818,98 @@
                 </div>
             </section>
 
-            <!-- ========= UNIDAD 14 ========= -->
+            <!-- ========= UNIDAD 14 (Gris Oscuro) ========= -->
             <section id="unidad14">
                 <h2 class="unit-14-color unit-14-border">Unidad 14: Confirmación y Extinción de los Actos</h2>
                 
+                <h3 class="unit-14-color">Esquema General de la Unidad</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 my-4">
+                    <ul class="list-none pl-0">
+                        <li>
+                            <span class="font-bold text-lg">VICISITUDES DEL ACTO JURÍDICO</span>
+                            <ul class="list-none pl-5 mt-2 border-l-2 border-slate-300">
+                                <li><span class="font-semibold">1. Saneamiento (Convalidación)</span>
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) Confirmación (Art. 393)</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Sanea vicio de <b>Nulidad Relativa</b>.</li>
+                                                <li>Debe cesar el vicio.</li>
+                                                <li>Formas: Expresa o Tácita (ejecución voluntaria).</li>
+                                                <li>Efecto: Retroactivo.</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">b) Ratificación (Art. 369)</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Sanea <b>Falta de Representación</b>.</li>
+                                                <li>Efecto: Retroactivo.</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">2. Extinción</span>
+                                    <ul class="list-none pl-5 mt-2 border-l-2 border-gray-300">
+                                        <li><span class="font-medium">a) Hechos Extintivos</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li>Muerte (obligaciones <i>intuitu personae</i>).</li>
+                                                <li>Confusión (Art. 931).</li>
+                                                <li>Imposibilidad de Cumplimiento (Art. 955).</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">b) Actos Extintivos</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li><b>Revocación (Art. 1077):</b> Voluntad unilateral + Causa Legal. Efecto Retroactivo (Ex Tunc).</li>
+                                                <li><b>Rescisión (Art. 1076):</b> Mutuo acuerdo (o unilateral si se pactó). Efecto Hacia Futuro (Ex Nunc).</li>
+                                                <li><b>Resolución (Art. 1083):</b> Por hecho posterior (ej. incumplimiento). Efecto Retroactivo (Ex Tunc).</li>
+                                            </ul>
+                                        </li>
+                                        <li class="mt-1"><span class="font-medium">c) Por paso del tiempo</span>
+                                            <ul class="list-disc pl-5 text-sm">
+                                                <li><b>Prescripción:</b> Extingue la ACCIÓN. (Se suspende e interrumpe).</li>
+                                                <li><b>Caducidad:</b> Extingue el DERECHO. (Plazo fatal, no se suspende ni interrumpe).</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
                 <h3 id="unidad14-a" class="unit-14-color">a) Convalidación y Confirmación</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <!-- ... (Contenido U14) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Convalidación (Género):</strong> Mecanismos legales por los cuales un acto que nació con un vicio se sanea y adquiere plena validez.</p>
-                    <h4 class="mt-3 mb-1">Confirmación (Especie):</h4>
+                    <h4 class="mt-3 mb-1 unit-14-color">Confirmación (Especie):</h4>
                     <p class="mb-2"><strong>Concepto:</strong> Acto jurídico unilateral por el cual la persona que puede pedir la nulidad renuncia a esa acción y sanea el vicio (ej. menor que al cumplir 18 ratifica una venta que hizo a los 17).</p>
                     <p class="mb-2"><strong>Naturaleza:</strong> Acto jurídico unilateral (solo requiere la voluntad del que puede invocar la nulidad).</p>
                     <p class="mb-2"><strong>Actos Susceptibles (Art. 388 CCCN):</strong> Solo los viciados de <strong>Nulidad Relativa</strong>. Los de Nulidad Absoluta NO son confirmables.</p>
-                    <h4 class="mt-3 mb-1">Condiciones (Art. 393 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-14-color">Condiciones (Art. 393 CCCN):</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>De Fondo:</strong> Que haya cesado el vicio (ej. el menor es mayor, la víctima de violencia está a salvo).</li>
                         <li><strong>De Forma:</strong> El acto de confirmación no debe tener vicios.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Formas (Arts. 393 y 394 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-14-color">Formas (Arts. 393 y 394 CCCN):</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Expresa:</strong> Por escrito (inst. público o privado), debe contener la sustancia del acto original, el vicio, y la intención de sanearlo.</li>
                         <li><strong>Tácita:</strong> Resulta de la ejecución voluntaria (total o parcial) del acto, conociendo el vicio y habiendo este cesado (ej. la víctima de dolo sigue pagando las cuotas).</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Efectos (Art. 395 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-14-color">Efectos (Art. 395 CCCN):</h4>
                     <p class="mb-2">Efecto <strong>retroactivo</strong> a la fecha del acto original (se considera válido desde el día 1), sin perjudicar a terceros.</p>
                 </div>
 
                 <h3 id="unidad14-b" class="unit-14-color">b) Ratificación</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (No confundir con Confirmación):</strong> Acto unilateral por el cual una persona aprueba lo que otra hizo en su nombre, pero <strong>sin poder (representación) suficiente</strong> (ej. tu hermano vende tu auto sin permiso, y tú luego aceptas el dinero).</p>
                     <p class="mb-2"><strong>Efectos (Art. 369 CCCN):</strong> Sanea la falta de representación. Tiene efecto retroactivo al día del acto, sin afectar derechos de terceros.</p>
                 </div>
 
                 <h3 id="unidad14-c" class="unit-14-color">c) Extinción de las Relaciones Jurídicas</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                     <!-- ... (contenido) ... -->
+                <div class="content-box">
                      <p class="mb-2">Es la finalización de la relación jurídica. Puede ser causada por un hecho jurídico (evento involuntario) o un acto jurídico (acto voluntario destinado a extinguirla).</p>
                 </div>
 
                 <h3 id="unidad14-d" class="unit-14-color">d) Hechos Jurídicos Extintivos</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">Acontecimientos que ponen fin a la relación, generalmente sin la voluntad de las partes de extinguirla.</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Muerte:</strong> Extingue obligaciones <i>intuitu personae</i> (ej. obligación de un pintor de hacer un retrato, derecho a recibir alimentos).</li>
@@ -818,8 +919,7 @@
                 </div>
                 
                 <h3 id="unidad14-e" class="unit-14-color">e) Actos Jurídicos Extintivos</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">Actos voluntarios lícitos cuyo fin inmediato es extinguir una relación (ineficacia funcional).</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Revocación (Art. 1077 CCCN):</strong> Extinción por voluntad unilateral, basada en causa legal (la ley lo autoriza). <strong>Efectos:</strong> Hacia el pasado (ex tunc). (Ej. revocar donación por ingratitud).</li>
@@ -829,16 +929,15 @@
                 </div>
 
                 <h3 id="unidad14-f" class="unit-14-color">f) Prescripción</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto:</strong> Medio legal de adquisición de derechos (adquisitiva) o de liberación de obligaciones (liberatoria) por el transcurso del tiempo y la inacción del titular.</p>
                     <p class="mb-2"><strong>Finalidad:</strong> Seguridad jurídica y orden social. La ley no ampara derechos que no se ejercen.</p>
-                    <h4 class="mt-3 mb-1">Clasificación:</h4>
+                    <h4 class="mt-3 mb-1 unit-14-color">Clasificación:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Adquisitiva (Usucapión):</strong> Adquirir una cosa por poseerla (ej. 20 años para inmuebles).</li>
                         <li><strong>Liberatoria:</strong> Extingue la <strong>acción</strong> para exigir una obligación. La deuda subsiste como "obligación natural".</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Suspensión vs. Interrupción:</h4>
+                    <h4 class="mt-3 mb-1 unit-14-color">Suspensión vs. Interrupción:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Suspensión (Art. 2539 CCCN):</strong> "Pausa" el cómputo del tiempo. Al cesar la causa, el plazo se reanuda desde donde se detuvo (ej. mediación).</li>
                         <li><strong>Interrupción (Art. 2544 CCCN):</strong> "Resetea" el tiempo (lo pone a cero). El plazo vuelve a contarse de nuevo (ej. demanda judicial, reconocimiento de deuda).</li>
@@ -846,8 +945,7 @@
                 </div>
                 
                 <h3 id="unidad14-g" class="unit-14-color">g) Caducidad (vs. Prescripción)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2">Como solicitaste, aquí está el cuadro comparativo basado en tu imagen:</p>
                     <!-- Inicio del Cuadro Comparativo -->
                     <div class="overflow-x-auto mt-4">
@@ -887,53 +985,144 @@
                 </div>
             </section>
 
-            <!-- ========= UNIDAD 9 (AHORA AL FINAL) ========= -->
+            <!-- ========= UNIDAD 9 (Verde) ========= -->
             <section id="unidad9">
                 <h2 class="unit-9-color unit-9-border">Unidad 9: Persona Jurídica</h2>
                 
+                <h3 class="unit-9-color">Esquema General de la Unidad</h3>
+                <div class="bg-white p-6 rounded-lg shadow-md border border-gray-200 my-4">
+                    <ul class="list-none pl-0">
+                        <li>
+                            <span class="font-bold text-lg">PERSONA JURÍDICA (Art. 141)</span>
+                            <ul class="list-none pl-5 mt-2 border-l-2 border-indigo-300">
+                                <li><span class="font-semibold">1. Naturaleza Jurídica</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li>Teorías: Ficción (Savigny), Realidad (Gierke), Jurídica (Técnica/Realidad CCCN).</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">2. Clasificación</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li><b>Públicas (Art. 146):</b> Estado, Provincias, Iglesia Católica.</li>
+                                        <li><b>Privadas (Art. 148):</b> Sociedades, Asociaciones, Fundaciones, Mutuales, etc.</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">3. Atributos</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li>Nombre (Art. 151), Domicilio (Art. 152), Patrimonio (Art. 154), Duración (Art. 155).</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">4. Funcionamiento</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li><b>Capacidad:</b> Principio de Especialidad (Art. 141).</li>
+                                        <li><b>Responsabilidad:</b> Contractual y Extracontractual (Art. 1763).</li>
+                                        <li><b>Inoponibilidad (Art. 144):</b> "Corrimiento del velo" por fraude o abuso.</li>
+                                    </ul>
+                                </li>
+                                <li class="mt-1"><span class="font-semibold">5. Fin de la Existencia</span>
+                                    <ul class="list-disc pl-5 text-sm">
+                                        <li><b>Disolución (Art. 163):</b> Ocurre la causal (vencimiento plazo, quiebra, etc.).</li>
+                                        <li><b>Liquidación (Art. 167):</b> Proceso para pagar deudas y vender activos.</li>
+                                        <li><b>Extinción:</b> Cancelación de la inscripción.</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+
                 <h3 id="unidad9-a" class="unit-9-color">a) Naturaleza jurídica, Concepto, Teorías, Clasificación y Atributos</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <!-- ... (Contenido U9) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Concepto (Art. 141 CCCN):</strong> "todos los entes a los cuales el ordenamiento jurídico les confiere aptitud para adquirir derechos y contraer obligaciones para el cumplimiento de su objeto y los fines de su creación". Es una construcción del derecho que permite a un grupo actuar como una sola entidad.</p>
-                    <h4 class="mt-3 mb-1">Teorías sobre Naturaleza Jurídica:</h4>
+                    <h4 class="mt-3 mb-1 unit-9-color">Teorías sobre Naturaleza Jurídica:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Teoría de la Ficción (Savigny):</strong> Las únicas personas reales son las humanas. Las P.J. son una ficción legal creada por el Estado.</li>
                         <li><strong>Teorías Realistas (Gierke):</strong> Las P.J. son organismos sociales reales y vivos, con voluntad propia, que el derecho solo se limita a reconocer.</li>
                         <li><strong>Teorías Negatorias:</strong> Niegan su existencia. Son solo un patrimonio afectado a un fin o un conjunto de relaciones.</li>
                         <li><strong>Teorías Jurídicas (Postura del CCCN):</strong> Son un "centro de imputación de normas", una herramienta técnica del derecho para organizar un patrimonio y relaciones de forma unificada.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Clasificación:</h4>
+                    <h4 class="mt-3 mb-1 unit-9-color">Clasificación:</h4>
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Públicas (Art. 146 CCCN):</strong> Estado Nacional, Provincias, Municipios, Entidades Autárquicas, Estados Extranjeros, Iglesia Católica.</li>
                         <li><strong>Privadas (Art. 148 CCCN):</strong> Sociedades, Asociaciones Civiles, Simples Asociaciones, Fundaciones, Iglesias, Mutuales, Cooperativas, Consorcio de P.H.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Atributos:</h4>
+                    <h4 class="mt-3 mb-1 unit-9-color">Atributos:</h4>
                      <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Nombre (Art. 151 CCCN):</strong> Debe incluir la forma jurídica (ej. "S.A.") y ser veraz y novedoso.</li>
                         <li><strong>Domicilio y Sede Social (Art. 152 CCCN):</strong> El domicilio se fija en el estatuto. La sede social es la dirección específica de la administración.</li>
                         <li><strong>Patrimonio (Art. 154 CCCN):</strong> Tienen un patrimonio propio y distinto del de sus miembros.</li>
+                        <li><strong>Capacidad (Art. 141 CCCN):</strong> Es la aptitud para ser titular de derechos y obligaciones. A diferencia de la persona humana (capacidad genérica), la P.J. se rige por el <strong>Principio de Especialidad</strong>: tiene capacidad solo para los actos que sirvan para cumplir su <strong>objeto</strong> estatutario.</li>
+                    </ul>
+                    <h4 class="mt-3 mb-1 unit-9-color">Otros Elementos:</h4>
+                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Duración (Art. 155 CCCN):</strong> Ilimitada, salvo que el estatuto o la ley dispongan lo contrario.</li>
                         <li><strong>Nacionalidad.</strong></li>
                     </ul>
                 </div>
                 
                 <h3 id="unidad9-b" class="unit-9-color">b) Constitución y funcionamiento</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Constitución (Art. 142 CCCN):</strong> La existencia comienza desde su constitución. No se necesita autorización estatal, salvo casos específicos (Asociaciones Civiles, Fundaciones) donde se requiere inscripción.</p>
                     <p class="mb-2"><strong>Funcionamiento:</strong> Se rige por su estatuto. Se lleva a cabo por sus órganos (gobierno, administración, fiscalización - Art. 158). Se permiten reuniones a distancia (Art. 161).</p>
+                
+                    <h4 class="mt-4 mb-2 unit-9-color">Ejemplo Didáctico: Acta Constitutiva y Estatuto de Asociación Civil</h4>
+                    <div class="bg-gray-50 border border-gray-300 rounded-lg p-4 mt-2">
+                        <blockquote class="border-l-4 border-blue-500 bg-blue-50 text-blue-800 p-3 rounded-md mb-4 text-sm italic">
+                            <strong>Comentario Didáctico:</strong> Este es el acto fundacional de la persona jurídica. Es el "certificado de nacimiento" donde consta la voluntad de los fundadores y las reglas básicas. Se basa en los Arts. 148 y 169 del CCCN.
+                        </blockquote>
+
+                        <p class="mb-2">En la Ciudad Autónoma de Buenos Aires, a los 5 días del mes de noviembre de 2025, siendo las 18:00 horas, se reúnen en la calle Av. Corrientes 1234, Piso 5°, Oficina "A", las siguientes personas:</p>
+                        <ul class="list-disc pl-6 mb-2">
+                            <li><strong>Dr. Martín Estrada</strong>, argentino, D.N.I. 25.111.222, de estado civil casado, con domicilio en la calle Aráoz 1540 de esta ciudad,</li>
+                            <li><strong>Dra. Sofía Campos</strong>, argentina, D.N.I. 28.333.444, de estado civil soltera, con domicilio en la calle Malabia 2110 de esta ciudad,</li>
+                        </ul>
+                        <p class="mb-2">Quienes resuelven, en ejercicio del derecho de asociación, constituir una persona jurídica privada bajo la forma de <strong>Asociación Civil</strong>, la cual se regirá por el siguiente Estatuto y las normas pertinentes del Código Civil y Comercial de la Nación y la legislación aplicable:</p>
+
+                        <h5 class="font-bold text-center text-lg mt-4 mb-2 font-serif">ESTATUTO SOCIAL DEL "CENTRO DE ESTUDIOS DEL NUEVO CÓDIGO"</h5>
+                        
+                        <h6 class="font-bold text-md mt-3 font-serif">TÍTULO I - DENOMINACIÓN, DOMICILIO Y OBJETO</h6>
+                        <p class="mb-1"><strong>ARTÍCULO 1°.- DENOMINACIÓN:</strong> La asociación se denominará "Centro de Estudios del Nuevo Código Asociación Civil".</p>
+                        <p class="mb-1"><strong>ARTÍCULO 2°.- DOMICILIO:</strong> La Asociación fija su domicilio legal en la jurisdicción de la Ciudad Autónoma de Buenos Aires.</p>
+                        <blockquote class="border-l-4 border-blue-500 bg-blue-50 text-blue-800 p-3 rounded-md my-2 text-sm italic">
+                            <strong>Comentario Didáctico:</strong> El Art. 151 CCCN exige el nombre, que debe incluir la forma jurídica ("Asociación Civil"). El Art. 152 CCCN exige el domicilio, que fija la jurisdicción y la ley aplicable. La dirección exacta (Av. Corrientes 1234) es la "sede social" y puede cambiarse por decisión del órgano de administración sin modificar el estatuto.
+                        </blockquote>
+                        <p class="mb-1"><strong>ARTÍCULO 3°.- OBJETO:</strong> La Asociación tendrá por objeto principal, y sin fines de lucro, el estudio, la investigación, la difusión y el debate académico del Código Civil y Comercial de la Nación. Para ello podrá organizar cursos, jornadas, publicar artículos de doctrina y fomentar el intercambio de ideas entre profesionales y estudiantes.</p>
+                        <blockquote class="border-l-4 border-blue-500 bg-blue-50 text-blue-800 p-3 rounded-md my-2 text-sm italic">
+                            <strong>Comentario Didáctico:</strong> Este es el artículo clave. El objeto debe ser preciso y no lucrativo (Art. 169 CCCN). Define el "Principio de Especialidad" (Art. 141 CCCN), que limita la capacidad de la asociación: solo puede realizar actos que sirvan para cumplir este fin.
+                        </blockquote>
+
+                        <h6 class="font-bold text-md mt-3 font-serif">TÍTULO II - PATRIMONIO INICIAL</h6>
+                        <p class="mb-1"><strong>ARTÍCULO 4°.- PATRIMONIO:</strong> El patrimonio inicial de la asociación se constituye con el aporte de sus fundadores. En este acto, el Dr. Martín Estrada aporta la suma de PESOS DOSCIENTOS CINCUENTA MIL ($250.000) y la Dra. Sofía Campos aporta la suma de PESOS DOSCIENTOS CINCUENTA MIL ($250.000), conformando un patrimonio inicial total de PESOS QUINIENTOS MIL ($500.000). Dicho patrimonio se incrementará en el futuro con las cuotas sociales, donaciones, subsidios y el producido de las actividades lícitas que realice la entidad conforme a su objeto.</p>
+                        <blockquote class="border-l-4 border-blue-500 bg-blue-50 text-blue-800 p-3 rounded-md my-2 text-sm italic">
+                            <strong>Comentario Didáctico:</strong> El patrimonio es un atributo esencial (Art. 154 CCCN). Es fundamental que sea propio y distinto del patrimonio de los fundadores.
+                        </blockquote>
+
+                        <h6 class="font-bold text-md mt-3 font-serif">TÍTULO III - ÓRGANOS DE GOBIERNO Y ADMINISTRACIÓN</h6>
+                        <p class="mb-1"><strong>ARTÍCULO 5°.- ÓRGANOS:</strong> La Asociación será dirigida, administrada y fiscalizada por los siguientes órganos: a) La Comisión Directiva (Órgano de Administración). b) La Asamblea de Asociados (Órgano de Gobierno). c) El Órgano de Fiscalización (Comisión Revisora de Cuentas).</p>
+                        <p class="mb-1"><strong>ARTÍCULO 6°.- DESIGNACIÓN DE AUTORIDADES:</strong> En este acto constitutivo, los fundadores resuelven designar la primera Comisión Directiva, que durará dos años en sus funciones, quedando conformada de la siguiente manera: Presidente: Dr. Martín Estrada. Secretaria: Dra. Sofía Campos. Tesorero: (Vacante, a designar por la Comisión Directiva). Órgano de Fiscalización (Titular): Dr. Alberto Fernández (DNI 10.111.222).</p>
+
+                        <h6 class="font-bold text-md mt-3 font-serif">TÍTULO IV - DISOLUCIÓN Y LIQUIDACIÓN</h6>
+                        <p class="mb-1"><strong>ARTÍCULO 7°.- DESTINO DE LOS BIENES:</strong> En caso de disolución, una vez pagadas todas las deudas, el remanente de los bienes no podrá distribuirse entre los asociados. Deberá ser donado a una entidad de bien común, sin fines de lucro, con personería jurídica domiciliada en el país y exenta de gravámenes impositivos, que será designada por la Asamblea de liquidación.</p>
+                        <blockquote class="border-l-4 border-blue-500 bg-blue-50 text-blue-800 p-3 rounded-md my-2 text-sm italic">
+                            <strong>Comentario Didáctico:</strong> Esta es una cláusula obligatoria (Art. 163 inc. j y Art. 170 CCCN). Al ser una entidad sin fin de lucro, los miembros no pueden "repartirse las ganancias" ni el sobrante al final.
+                        </blockquote>
+
+                        <h6 class="font-bold text-md mt-3 font-serif">TÍTULO V - AUTORIDAD DE CONTRALOR</h6>
+                        <p class="mb-1"><strong>ARTÍCULO 8°.- INSCRIPCIÓN:</strong> Se autoriza al Dr. Martín Estrada para gestionar la correspondiente autorización e inscripción de la presente Asociación Civil ante la Inspección General de Justicia (I.G.J.), aceptando cualquier observación de forma que dicho organismo realice.</p>
+                        <blockquote class="border-l-4 border-blue-500 bg-blue-50 text-blue-800 p-3 rounded-md my-2 text-sm italic">
+                            <strong>Comentario Didáctico:</strong> Aquí se menciona la autoridad de contralor (en CABA es la I.G.J.). El acto existe desde su constitución, pero necesita la autorización estatal e inscripción para funcionar y ser oponible a terceros.
+                        </blockquote>
+                    </div>
                 </div>
 
                 <h3 id="unidad9-c" class="unit-9-color">c) Capacidad y Representación (Principio de especialidad)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <p class="mb-2"><strong>Capacidad (Art. 141 CCCN):</strong> Se rige por el <strong>Principio de Especialidad</strong>. La P.J. solo tiene capacidad para actos relacionados con el cumplimiento de su objeto. Los actos "notoriamente extraños" al objeto pueden ser nulos.</p>
                     <p class="mb-2"><strong>Representación (Art. 158 CCCN):</strong> Quienes administran la entidad la representan y obligan, siempre que actúen dentro de las facultades del estatuto.</p>
                 </div>
 
                 <h3 id="unidad9-d" class="unit-9-color">d) Responsabilidad (Contractual y Extracontractual)</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
+                <div class="content-box">
                     <ul class="list-disc pl-6 space-y-1">
                         <li><strong>Responsabilidad de la P.J.:</strong> Responde por obligaciones contractuales (Art. 158) y por daños extracontractuales que causen sus directores en ejercicio de sus funciones (Art. 1763).</li>
                         <li><strong>Responsabilidad de los Administradores (Art. 160):</strong> Responden de forma ilimitada y solidaria frente a la P.J., sus miembros y terceros por daños causados por su culpa o dolo.</li>
@@ -942,9 +1131,8 @@
                 </div>
 
                 <h3 id="unidad9-e" class="unit-9-color">e) Fin de la existencia</h3>
-                <div class="p-4 bg-white rounded-lg shadow border border-gray-200 my-3">
-                    <!-- ... (contenido) ... -->
-                    <h4 class="mt-3 mb-1">Disolución (Art. 163 CCCN):</h4>
+                <div class="content-box">
+                    <h4 class="mt-3 mb-1 unit-9-color">Disolución (Art. 163 CCCN):</h4>
                     <p class="mb-2">Momento en que ocurre una causal de finalización. Causales:</p>
                     <ul class="list-disc pl-6 space-y-1">
                         <li>Decisión de sus miembros.</li>
@@ -953,9 +1141,9 @@
                         <li>Quiebra, Fusión, Escisión.</li>
                         <li>Revocación de la autorización estatal.</li>
                     </ul>
-                    <h4 class="mt-3 mb-1">Prórroga y Reconducción:</h4>
+                    <h4 class="mt-3 mb-1 unit-9-color">Prórroga y Reconducción:</h4>
                     <p class="mb-2">Antes del vencimiento se puede acordar la <strong>prórroga</strong> (Art. 165). Después de vencido, se puede acordar la <strong>reconducción</strong> (Art. 166).</p>
-                    <h4 class="mt-3 mb-1">Liquidación (Art. 167 CCCN):</h4>
+                    <h4 class="mt-3 mb-1 unit-9-color">Liquidación (Art. 167 CCCN):</h4>
                     <p class="mb-2">La disolución no extingue la personalidad, sino que la pone en estado de liquidación. La P.J. subsiste solo para este fin (vender activos, pagar deudas). Concluida la liquidación y cancelada la inscripción, se extingue definitivamente.</p>
                 </div>
             </section>
@@ -963,36 +1151,9 @@
         </main>
     </div>
 
-    <!-- SCRIPT PARA EL MENÚ DESPLEGABLE -->
+    <!-- SCRIPT PARA EL MENÚ DESPLEGABLE (REVERTIDO) -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const collapsibles = document.querySelectorAll('.sidebar-collapsible');
-            
-            collapsibles.forEach(item => {
-                // El evento de clic se añade a todo el div
-                item.addEventListener('click', function(e) {
-                    // Si el clic fue sobre el enlace <a>, deja que el navegador navegue
-                    if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
-                        // Opcional: cierra otros menús si quieres
-                        // return; // Deja que el enlace funcione
-                    }
-                    
-                    // Si el clic fue en el div, la flecha, o el enlace, alterna el menú
-                    
-                    // Encuentra la flecha dentro de este item y rótala
-                    const arrow = this.querySelector('.sidebar-arrow');
-                    if (arrow) {
-                        arrow.classList.toggle('rotated');
-                    }
-                    
-                    // Encuentra el submenú (que es el siguiente elemento hermano) y muéstralo/ocúltalo
-                    const submenu = this.nextElementSibling;
-                    if (submenu && submenu.classList.contains('submenu')) {
-                        submenu.classList.toggle('hidden');
-                    }
-                });
-            });
-        });
+        // Script de menú desplegable eliminado
     </script>
 
 </body>
