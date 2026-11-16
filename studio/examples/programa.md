@@ -1,0 +1,8 @@
+- Esquema General de la Unidad
+- a) Hecho y Hechos Jurídicos (Concepto y Clasificación)
+- b) Actos Voluntarios (Enumeración, El Silencio)
+- c) Imputación de consecuencias (Clasificación)
+- d) Hechos Involuntarios y Actos Ilícitos (Delitos, Cuasidelitos)
+- e) Acto Jurídico: Caracteres y Elementos Esenciales
+- f) Modalidades (Plazo, Condición y Cargo)
+- g) Efectos e Interpretación

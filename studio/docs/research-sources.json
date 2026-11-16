@@ -1,0 +1,107 @@
+{
+  "consulted_on": "2026-11-15 America/Buenos_Aires",
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/souzatharsis/podcastfy/main/README.md",
+      "sha256": "5854bc96f5064e39015e87518457d74a81e50fa63cb2198b1f22b5636fac51c0",
+      "bytes": 10780
+    },
+    {
+      "url": "https://raw.githubusercontent.com/souzatharsis/podcastfy/main/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "url": "https://raw.githubusercontent.com/souzatharsis/podcastfy/main/podcastfy/content_generator.py",
+      "sha256": "231fe718b90780911b28815d7aebbf11ec3ac9bfa4b88cc622a6bda7845d8dba",
+      "bytes": 36605
+    },
+    {
+      "url": "https://raw.githubusercontent.com/souzatharsis/podcastfy/main/podcastfy/text_to_speech.py",
+      "sha256": "fff055e1506a228acca1201e46f456349189785cd0d3eeadca4e8aaa8ca6f6a7",
+      "bytes": 14391
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hexgrad/kokoro/main/README.md",
+      "sha256": "b50b84220668f8247a2405b249c34c7083acc24114279ff1429fd79f46a2c04b",
+      "bytes": 8355
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hexgrad/kokoro/main/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yujxx/PodAgent/main/README.md",
+      "sha256": "49a1ebe03a528c29d674b7286eb21d3aac75764ad92f65105b96eaeed095c955",
+      "bytes": 4556
+    },
+    {
+      "url": "https://raw.githubusercontent.com/yujxx/PodAgent/main/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "url": "https://raw.githubusercontent.com/google-gemini/cookbook/main/quickstarts/Get_started_TTS.ipynb",
+      "sha256": "04d46310d4b827d676be12fafeb53f5b8e92ea2fd5fe0b34aa2290367a298c8e",
+      "bytes": 5545828
+    },
+    {
+      "url": "https://raw.githubusercontent.com/googleapis/python-genai/main/google/genai/interactions.py",
+      "sha256": "27e29179f948d6b7351df43a631f40537d4f81dba470e37b7bc7af90aefaae8a",
+      "bytes": 7749
+    },
+    {
+      "url": "https://raw.githubusercontent.com/googleapis/python-genai/main/google/genai/_gaos/types/interactions/interaction.py",
+      "sha256": "073ea11cd93a0de3ce02a508c6c606bb2a7966ea14f562df3242a007a94d5428",
+      "bytes": 21463
+    },
+    {
+      "url": "https://raw.githubusercontent.com/elevenlabs/elevenlabs-python/main/src/elevenlabs/text_to_speech/client.py",
+      "sha256": "7bf7d91c2fbe633950105b10ac4fb050df9a345ece1a7fcce8712688697b73ea",
+      "bytes": 77741
+    },
+    {
+      "url": "https://raw.githubusercontent.com/facebookresearch/audiocraft/main/README.md",
+      "sha256": "0240bd901c60c42508680e6beb580574836fd44b8476e721f811831fd2780638",
+      "bytes": 4834
+    },
+    {
+      "url": "https://raw.githubusercontent.com/resemble-ai/chatterbox/master/README.md",
+      "sha256": "8e94dfd0a943d95dc2d24db51c71a6da2e3401563637409f26782e36a266b4ae",
+      "bytes": 15885
+    },
+    {
+      "url": "https://raw.githubusercontent.com/resemble-ai/chatterbox/master/LICENSE",
+      "sha256": "4248e910a928849fe5815a0f9236e17fa07768d95b9193212752c464b93d6caa",
+      "bytes": 1067
+    },
+    {
+      "url": "https://raw.githubusercontent.com/OHF-Voice/piper1-gpl/main/README.md",
+      "sha256": "f28e62881ff657e3fe5a5dd8cf869a910c0b145f8a90b1bda8a07fc5ca9bed7e",
+      "bytes": 3103
+    },
+    {
+      "url": "https://raw.githubusercontent.com/FunAudioLLM/CosyVoice/main/README.md",
+      "sha256": "66436370172c2830ed98aa643b31898c65e16eee14ade68f00828d21fae602e0",
+      "bytes": 13764
+    },
+    {
+      "url": "https://raw.githubusercontent.com/FunAudioLLM/CosyVoice/main/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
+      "bytes": 11357
+    },
+    {
+      "url": "https://raw.githubusercontent.com/espeak-ng/espeak-ng/master/COPYING",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "bytes": 35147
+    }
+  ],
+  "blocked": [
+    "https://ai.google.dev/gemini-api/docs/pricing",
+    "https://ai.google.dev/gemini-api/docs/speech-generation",
+    "https://elevenlabs.io/pricing/api",
+    "https://elevenlabs.io/docs/overview/models"
+  ],
+  "note": "Hashes of retrieved public source files; no API credentials or transient GitHub HTML tokens are retained."
+}

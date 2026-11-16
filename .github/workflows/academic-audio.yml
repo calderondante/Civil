@@ -1,0 +1,56 @@
+name: Academic Audio Studio
+on:
+  push:
+    paths: ['studio/**', '.github/workflows/academic-audio.yml']
+  pull_request:
+    paths: ['studio/**', '.github/workflows/academic-audio.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: studio/web/package-lock.json
+      - run: sudo apt-get update && sudo apt-get install -y ffmpeg
+      - run: python -m pip install -r studio/backend/requirements.lock
+      - run: python -m pytest -q
+        working-directory: studio/backend
+      - run: npm ci && npm run build && npm run typecheck && npm audit --omit=dev --audit-level=high
+        working-directory: studio/web
+      - run: npx playwright install --with-deps chromium
+        working-directory: studio/web
+      - name: Start API and durable worker
+        working-directory: studio/backend
+        run: |
+          python -m uvicorn aas.api:app --host 127.0.0.1 --port 8010 >/tmp/aas-api.log 2>&1 &
+          python -m aas.worker >/tmp/aas-worker.log 2>&1 &
+      - name: Browser and real speech integration
+        working-directory: studio/web
+        env:
+          STUDIO_LOGIN_USER: studio
+          STUDIO_LOGIN_PASSWORD: local-browser-test-only
+        run: |
+          npm start -- --port 3000 >/tmp/aas-web.log 2>&1 &
+          for n in $(seq 1 30); do
+            if curl -fsS http://127.0.0.1:8010/health >/dev/null && curl -fsS -u studio:local-browser-test-only http://127.0.0.1:3000 >/dev/null; then break; fi
+            sleep 1
+          done
+          node tests/e2e.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: academic-audio-evidence
+          path: |
+            studio/web/data/e2e-report.json
+            /tmp/aas-coverage.png
+            /tmp/aas-audio.png
+            /tmp/aas-mobile.png

@@ -1,0 +1,16 @@
+{
+  "job_id": "9c287dea-7316-4db1-8fb5-ca8174985e17",
+  "provider": "local",
+  "model": "espeak-ng-loader-0.2.4",
+  "audio_status": "unverified",
+  "duration_seconds": 649.776,
+  "duration_on_target": true,
+  "revision_hash": "4b36e73e3df42b86db0a639a9c0d9f7a3cca589f09407c2ba2efb3b1f80085fc",
+  "coverage_percent": 100,
+  "segments": 104,
+  "voices": [
+    "es",
+    "es+f3"
+  ],
+  "validation": "real local speech + browser + FFmpeg, no real Gemini/ElevenLabs or ASR"
+}
