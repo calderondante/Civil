@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '24'
       - run: sudo apt-get update && sudo apt-get install -y ffmpeg
-      - run: python -m pip install -r studio/backend/requirements.lock
+      - run: python -m pip install -r studio/backend/requirements-free.lock
       - run: python -m pytest -q
         working-directory: studio/backend
       - run: npm ci && npm run build && npm run typecheck && npm audit --omit=dev --audit-level=high

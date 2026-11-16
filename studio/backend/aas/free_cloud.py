@@ -23,7 +23,7 @@ from .core import (
     revision_hash,
 )
 from .open_models import OpenVoices, OpenASR, file_hash, setup_models
-from .tts import spoken_text, join_audio, probe
+from .tts import join_audio, probe
 
 REPO = Path(__file__).resolve().parents[3]
 VOICES = ("kokoro:ef_dora", "kokoro:em_alex", "kokoro:em_santa")
@@ -87,6 +87,23 @@ def save(root, relative, data):
 
 def load(root, relative):
     return json.loads(private_path(root, relative).read_text())
+
+
+def verify_imports(root, ep):
+    imports = None
+    if "import_fingerprint" in ep:
+        imports = {
+            key: load(root, "import-" + key + ".json") for key in ("source", "program")
+        }
+        if digest(imports) != ep["import_fingerprint"]:
+            raise FreeCloudError("document_import_manifest_modified")
+        for key, item in imports.items():
+            suffix = "." + item["format"]
+            # Keep .markdown inputs distinguishable from .md; TXT/PDF/DOCX are exact.
+            candidate = private_path(root, "inputs/" + key + suffix)
+            if not candidate.is_file() or file_hash(candidate) != item["sha256"]:
+                raise FreeCloudError("original_input_file_modified")
+    return imports
 
 
 def actions_privacy_guard(source=None, program=None, public_demo=False):
@@ -195,6 +212,42 @@ def documentary_dialogue(blocks, points, mapping):
     return segments
 
 
+def faithful_reading(blocks, mapping, voice_count=1):
+    if voice_count not in (1, 2):
+        raise FreeCloudError("one_or_two_voices_required")
+    groups = []
+    chapter_keys = []
+    for b in blocks:
+        path = b.get("path", [])
+        chapter = tuple(path[:2]) if path else ("Documento",)
+        if chapter not in chapter_keys:
+            chapter_keys.append(chapter)
+        if (
+            not groups
+            or groups[-1]["chapter"] != chapter
+            or sum(len(x["text"]) + 1 for x in groups[-1]["blocks"]) + len(b["text"])
+            > 1000
+        ):
+            groups.append({"chapter": chapter, "blocks": []})
+        groups[-1]["blocks"].append(b)
+    segments = []
+    for group in groups:
+        ids = [b["id"] for b in group["blocks"]]
+        segments.append(
+            {
+                "id": f"s{len(segments) + 1}",
+                "kind": "source",
+                "speaker": "profesora"
+                if voice_count == 1 or chapter_keys.index(group["chapter"]) % 2 == 0
+                else "profesor",
+                "text": "\n".join(b["text"] for b in group["blocks"]),
+                "source_ids": ids,
+                "topic_ids": [p for p, bids in mapping.items() if set(ids) & set(bids)],
+            }
+        )
+    return segments
+
+
 def prepare(
     source,
     program,
@@ -204,14 +257,38 @@ def prepare(
     wpm=140,
     target_minutes=10,
     public_demo=False,
+    mode="documentary",
+    voice_count=None,
 ):
     actions_privacy_guard(source, program, public_demo)
     root = private_root(directory)
     if private_path(root, "state.json").exists():
         raise FreeCloudError("workspace_already_exists_use_new_private_directory")
-    source_text = Path(source).read_text(encoding="utf-8")
-    program_text = Path(program).read_text(encoding="utf-8")
-    blocks, points = parse_source(source_text), parse_program(program_text)
+    from .documents import extract
+
+    imported = extract(source)
+    program_imported = extract(program)
+    source_text = imported["source"]
+    program_text = program_imported["source"]
+    if mode not in ("documentary", "reading"):
+        raise FreeCloudError("unsupported_reading_mode")
+    voice_count = (
+        voice_count if voice_count is not None else 1 if mode == "reading" else 2
+    )
+    blocks = imported.get("blocks") or parse_source(
+        source_text, include_headings=mode == "reading"
+    )
+    points = parse_program(program_text)
+    save(root, "import-source.json", imported)
+    save(root, "import-program.json", program_imported)
+    write_bytes(
+        root, "inputs/source" + Path(source).suffix.lower(), Path(source).read_bytes()
+    )
+    write_bytes(
+        root,
+        "inputs/program" + Path(program).suffix.lower(),
+        Path(program).read_bytes(),
+    )
     mapping = map_topics(blocks, points)
     if not 100 <= wpm <= 190:
         raise FreeCloudError("invalid_speech_rate")
@@ -221,7 +298,9 @@ def prepare(
         "blocks": blocks,
         "points": points,
         "mapping": mapping,
-        "segments": documentary_dialogue(blocks, points, mapping),
+        "segments": faithful_reading(blocks, mapping, voice_count)
+        if mode == "reading"
+        else documentary_dialogue(blocks, points, mapping),
         "pronunciation": {
             "CCCN": "Código Civil y Comercial de la Nación",
             "Art.": "artículo",
@@ -233,6 +312,30 @@ def prepare(
         "target_minutes": target_minutes,
         "approved_hash": None,
     }
+    episode.update(
+        {
+            "mode": mode,
+            "voice_count": voice_count,
+            "import_fingerprint": digest(
+                {"source": imported, "program": program_imported}
+            ),
+        }
+    )
+    if mode == "reading":
+        episode["pronunciation"]["__policy__"] = "es-ar-reading-v1"
+    from .speech import compile_speech
+
+    save(
+        root,
+        "spoken-plan-draft.json",
+        [
+            {
+                "segment_id": s["id"],
+                **compile_speech(s["text"], episode["pronunciation"]),
+            }
+            for s in episode["segments"]
+        ],
+    )
     revision = revision_hash(episode)
     save(root, f"revisions/{revision}.json", episode)
     save(root, "review.json", episode)
@@ -261,7 +364,13 @@ def prepare(
     }
 
 
-def approve(directory, *, reviewed=False, reviewer="workspace-reviewer"):
+def approve(
+    directory,
+    *,
+    reviewed=False,
+    reviewer="workspace-reviewer",
+    conversion_reviewed=False,
+):
     root = private_root(directory)
     state = load(root, "state.json")
     if not reviewed:
@@ -269,9 +378,25 @@ def approve(directory, *, reviewed=False, reviewer="workspace-reviewer"):
     original = load(root, f"revisions/{state['prepared_revision']}.json")
     if revision_hash(original) != state["prepared_revision"]:
         raise FreeCloudError("prepared_snapshot_modified")
+    verify_imports(root, original)
     proposal = load(root, "review.json")
-    for key in ("source", "program", "blocks", "points"):
-        if proposal.get(key) != original[key]:
+    for filename in ("import-source.json", "import-program.json"):
+        if (
+            private_path(root, filename).exists()
+            and load(root, filename).get("review_required")
+            and not conversion_reviewed
+        ):
+            raise FreeCloudError("ambiguous_document_layout_requires_conversion_review")
+    for key in (
+        "source",
+        "program",
+        "blocks",
+        "points",
+        "mode",
+        "voice_count",
+        "import_fingerprint",
+    ):
+        if key in original and proposal.get(key) != original[key]:
             raise FreeCloudError("immutable_source_modified")
     # Only editable fields enter the new revision. No forged LLM verdicts from a JSON editor.
     ep = copy.deepcopy(original)
@@ -289,6 +414,16 @@ def approve(directory, *, reviewed=False, reviewer="workspace-reviewer"):
     save(root, "coverage-reviewed.json", report)
     if not report["passed"]:
         raise FreeCloudError("substantial_audit_errors_see_private_report")
+    from .speech import compile_speech
+
+    save(
+        root,
+        "spoken-plan-approved.json",
+        [
+            {"segment_id": s["id"], **compile_speech(s["text"], ep["pronunciation"])}
+            for s in ep["segments"]
+        ],
+    )
     revision = revision_hash(ep)
     ep["approved_hash"] = revision
     ep["approval"] = {
@@ -389,6 +524,7 @@ def render(
     if not revision:
         raise FreeCloudError("explicit_review_required_before_synthesis")
     ep = load(root, f"revisions/{revision}.json")
+    imports = verify_imports(root, ep)
     if public_base is not None and any(
         ep[key] != public_base[key]
         for key in (
@@ -422,7 +558,11 @@ def render(
         )
     ):
         raise FreeCloudError("review_has_unapproved_edits")
-    if voice_a == voice_b or voice_a not in VOICES or voice_b not in VOICES:
+    if (
+        (ep.get("voice_count", 2) == 2 and voice_a == voice_b)
+        or voice_a not in VOICES
+        or voice_b not in VOICES
+    ):
         raise FreeCloudError("two_distinct_open_voices_required")
     chapters = chapters_for(ep, state["max_words"])
     segments = {s["id"]: s for s in ep["segments"]}
@@ -449,6 +589,10 @@ def render(
         "wpm": ep["wpm"],
         "engine_version": engines.version,
         "asr": "whisper-base-int8" if asr else None,
+        "comparison_version": __import__(
+            "aas.quality", fromlist=["QUALITY_VERSION"]
+        ).QUALITY_VERSION,
+        "mode": ep.get("mode", "documentary"),
     }
     run_hash = digest(config)
     prefix = f"runs/{run_hash}"
@@ -468,7 +612,10 @@ def render(
         for sid in chapter["segment_ids"]:
             segment = segments[sid]
             voice = voice_map[segment["speaker"]]
-            text = spoken_text(segment["text"], ep["pronunciation"])
+            from .speech import compile_speech
+
+            speech_plan = compile_speech(segment["text"], ep["pronunciation"])
+            text = speech_plan["spoken_text"]
             cache_key = digest(
                 {
                     "spoken": text,
@@ -490,6 +637,12 @@ def render(
                     file_hash(wav) == load(root, f"cache/{cache_key}.json")["sha256"]
                 )
             if not cached:
+                if wav.exists():
+                    write_bytes(
+                        root,
+                        "audio-history/" + file_hash(wav) + ".wav",
+                        wav.read_bytes(),
+                    )
                 with private_engine_log(root):
                     audio = engines.synthesize(text, voice, ep["wpm"])
                 wav = write_bytes(root, rel, audio)
@@ -503,8 +656,32 @@ def render(
                 "reason": "ASR not requested; review audio only",
             }
             if recognizer:
-                with private_engine_log(root):
-                    transcript = recognizer.transcribe(wav)
+                from .open_models import ASSETS
+
+                asr_key = digest(
+                    {
+                        "audio": file_hash(wav),
+                        "model": ASSETS["sherpa-onnx-whisper-base.tar.bz2"][1],
+                        "windows": "silence-v1",
+                        "lang": "es",
+                        "prompt": None,
+                    }
+                )
+                asr_cache = f"asr-cache/{asr_key}.json"
+                if private_path(root, asr_cache).exists():
+                    transcript = load(root, asr_cache)["transcript"]
+                else:
+                    with private_engine_log(root):
+                        transcript = recognizer.transcribe(wav)
+                    save(
+                        root,
+                        asr_cache,
+                        {
+                            "audio_sha256": file_hash(wav),
+                            "transcript": transcript,
+                            "model_profile": "base-int8-es-silence-v1-no-prompt",
+                        },
+                    )
                 from .quality import assess_transcript
 
                 verification = assess_transcript(text, transcript)
@@ -517,6 +694,7 @@ def render(
                 "cached": cached,
                 "seconds": probe(wav),
                 "spoken_text": text,
+                "speech_transformations": speech_plan["transformations"],
                 "transcript": transcript,
                 "verification": verification,
             }
@@ -527,7 +705,11 @@ def render(
         with tempfile.TemporaryDirectory(dir=root) as temporary:
             output = Path(temporary) / "chapter.mp3"
             with private_engine_log(root):
-                seconds = join_audio(paths, output)
+                seconds = join_audio(
+                    paths,
+                    output,
+                    pause_seconds=0.03 if ep.get("mode") == "reading" else 0.12,
+                )
             mp3 = write_bytes(
                 root, f"{prefix}/{chapter['id']}.mp3", output.read_bytes()
             )
@@ -547,6 +729,12 @@ def render(
     rendered = {sid for c in finished.values() for sid in c["segment_ids"]}
     report = {
         "source_audit": audit(ep),
+        "document_import": {
+            k: {"format": v["format"], "sha256": v["sha256"], "proof": v["proof"]}
+            for k, v in imports.items()
+        }
+        if imports
+        else None,
         "revision": revision,
         "configuration": config,
         "plan": chapters,
@@ -582,10 +770,35 @@ def render(
         with tempfile.TemporaryDirectory(dir=root) as temporary:
             output = Path(temporary) / "podcast.mp3"
             with private_engine_log(root):
-                seconds = join_audio(audio_paths, output)
+                seconds = join_audio(
+                    audio_paths,
+                    output,
+                    pause_seconds=0.03 if ep.get("mode") == "reading" else 0.12,
+                )
             write_bytes(root, f"{deliver}/podcast.mp3", output.read_bytes())
         report["duration_seconds"] = seconds
         save(root, f"{deliver}/coverage-audio.json", report)
+        save(
+            root,
+            f"{deliver}/differences.json",
+            {
+                "comparison_version": config["comparison_version"],
+                "audio_status": report["audio_status"],
+                "unresolved": [
+                    s
+                    for s in report["segments"]
+                    if s["verification"]["passed"] is not True
+                ],
+            },
+        )
+        write_bytes(
+            root,
+            f"{deliver}/transcript.txt",
+            "\n\n".join(
+                f"[{s['segment_id']}] {s['transcript'] if s['transcript'] is not None else '[ASR pendiente]'}"
+                for s in report["segments"]
+            ).encode(),
+        )
         export_script(root, f"{deliver}/script.md", ep)
         save(root, f"{deliver}/script.json", ep)
         for chapter in chapters:
@@ -597,12 +810,20 @@ def render(
         # Explicit allowlist: never zip source paths, caches, model files, or native engine logs.
         zip_path = private_path(root, "academic-audio.zip")
         with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as z:
-            for name in [
-                "podcast.mp3",
-                "script.md",
-                "script.json",
-                "coverage-audio.json",
-            ] + [f"{c['id']}.mp3" for c in chapters]:
+            for name in (
+                [
+                    "podcast.mp3",
+                    "script.md",
+                    "script.json",
+                    "coverage-audio.json",
+                ]
+                + (
+                    ["differences.json", "transcript.txt"]
+                    if ep.get("mode") == "reading"
+                    else []
+                )
+                + [f"{c['id']}.mp3" for c in chapters]
+            ):
                 z.write(private_path(root, f"{deliver}/{name}"), arcname=name)
         zip_path.chmod(0o600)
     return {
@@ -617,6 +838,85 @@ def render(
     }
 
 
+def recheck(directory):
+    """Re-evaluate cached ASR text with new comparison rules, never resynthesize audio."""
+    from .quality import assess_transcript, QUALITY_VERSION
+
+    root = private_root(directory)
+    state = load(root, "state.json")
+    latest = load(root, "latest-run.json")
+    report = load(root, latest["prefix"] + "/report.json")
+    ep = load(root, f"revisions/{state['approved_revision']}.json")
+    verify_imports(root, ep)
+    if report["revision"] != revision_hash(ep) or not audit(ep)["passed"]:
+        raise FreeCloudError("obsolete_audio_revision")
+    save(root, f"quality-history/{time.time_ns()}.json", report)
+    for row in report["segments"]:
+        wav = private_path(root, row["cache_file"])
+        if file_hash(wav) != row["sha256"]:
+            raise FreeCloudError("cached_audio_changed")
+        row["verification"] = (
+            assess_transcript(row["spoken_text"], row["transcript"])
+            if row["transcript"] is not None
+            else {"passed": None, "reason": "ASR not configured"}
+        )
+    report["comparison_revision"] = QUALITY_VERSION
+    report["audio_status"] = (
+        "verified"
+        if report["complete"]
+        and all(r["verification"]["passed"] is True for r in report["segments"])
+        else "unverified"
+    )
+    save(root, latest["prefix"] + "/report.json", report)
+    if report["complete"]:
+        old = load(root, "deliverables/coverage-audio.json")
+        if "duration_seconds" in old:
+            report["duration_seconds"] = old["duration_seconds"]
+        save(root, "deliverables/coverage-audio.json", report)
+        differences = {
+            "comparison_version": QUALITY_VERSION,
+            "audio_status": report["audio_status"],
+            "unresolved": [
+                r for r in report["segments"] if r["verification"]["passed"] is not True
+            ],
+        }
+        save(root, "deliverables/differences.json", differences)
+        write_bytes(
+            root,
+            "deliverables/transcript.txt",
+            "\n\n".join(
+                f"[{r['segment_id']}] {r['transcript'] if r['transcript'] is not None else '[ASR pendiente]'}"
+                for r in report["segments"]
+            ).encode(),
+        )
+        names = [
+            "podcast.mp3",
+            "script.md",
+            "script.json",
+            "coverage-audio.json",
+            "differences.json",
+            "transcript.txt",
+        ] + [c["id"] + ".mp3" for c in report["plan"]]
+        import io
+
+        out = io.BytesIO()
+        with zipfile.ZipFile(out, "w", zipfile.ZIP_DEFLATED) as z:
+            for name in names:
+                z.writestr(
+                    name, private_path(root, "deliverables/" + name).read_bytes()
+                )
+        write_bytes(root, "academic-audio.zip", out.getvalue())
+    return {
+        "stage": "rechecked",
+        "comparison_version": QUALITY_VERSION,
+        "audio_status": report["audio_status"],
+        "new_audio_segments": 0,
+        "pending": sum(
+            r["verification"]["passed"] is not True for r in report["segments"]
+        ),
+    }
+
+
 def main():
     os.umask(0o077)
     p = argparse.ArgumentParser(description=__doc__)
@@ -625,6 +925,7 @@ def main():
     model.add_argument("--directory", required=True)
     model.add_argument("--piper", action="store_true")
     model.add_argument("--asr", action="store_true")
+    model.add_argument("--review-asr", dest="review", action="store_true")
     prep = sub.add_parser("prepare")
     prep.add_argument("--source", required=True)
     prep.add_argument("--program", required=True)
@@ -633,9 +934,12 @@ def main():
     prep.add_argument("--wpm", type=int, default=140)
     prep.add_argument("--target-minutes", type=int, default=10)
     prep.add_argument("--public-demo", action="store_true")
+    prep.add_argument("--mode", choices=["reading", "documentary"], default="reading")
+    prep.add_argument("--voice-count", type=int, choices=[1, 2])
     approval = sub.add_parser("approve")
     approval.add_argument("--workdir", required=True)
     approval.add_argument("--reviewed", action="store_true")
+    approval.add_argument("--conversion-reviewed", action="store_true")
     approval.add_argument("--reviewer", default="workspace-reviewer")
     r = sub.add_parser("render")
     r.add_argument("--workdir", required=True)
@@ -646,6 +950,12 @@ def main():
     r.add_argument("--regenerate")
     r.add_argument("--asr", action="store_true")
     r.add_argument("--threads", type=int, choices=range(1, 5), default=2)
+    check = sub.add_parser("recheck")
+    check.add_argument("--workdir", required=True)
+    review = sub.add_parser("review-audio")
+    review.add_argument("--workdir", required=True)
+    review.add_argument("--models", required=True)
+    review.add_argument("--segments")
     args = vars(p.parse_args())
     command = args.pop("command")
     try:
@@ -655,6 +965,16 @@ def main():
         elif command == "prepare":
             args["directory"] = args.pop("workdir")
             result = prepare(**args)
+        elif command == "review-audio":
+            from .review_audio import review_existing
+
+            result = review_existing(
+                args["workdir"],
+                args["models"],
+                args["segments"].split(",") if args["segments"] else None,
+            )["counts"]
+        elif command == "recheck":
+            result = recheck(args["workdir"])
         elif command == "approve":
             args["directory"] = args.pop("workdir")
             result = approve(**args)
@@ -671,7 +991,14 @@ def main():
         print(json.dumps(result))
     except Exception as exc:
         # Keep messages from inputs/libraries out of logs; details stay in private workspace.
-        code = str(exc) if isinstance(exc, FreeCloudError) else type(exc).__name__
+        from .documents import DocumentError
+        from .speech import SpeechPlanError
+
+        code = (
+            str(exc)
+            if isinstance(exc, (FreeCloudError, DocumentError, SpeechPlanError))
+            else type(exc).__name__
+        )
         print(json.dumps({"stage": "blocked", "code": code}), file=sys.stderr)
         return 1
     return 0

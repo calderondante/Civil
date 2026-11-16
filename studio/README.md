@@ -1,17 +1,16 @@
-# Academic Audio Studio — cloud, CPU y costo adicional cero
+# Academic Audio Studio — apuntes personales, lectura fiel en cloud
 
-El flujo actual corre **por demanda dentro de Codex Cloud**, con voces neuronales abiertas en CPU y descargas privadas desde la conversación. No necesita tu PC, hosting permanente, Supabase, tarjetas, facturación ni APIs comerciales. Usa recursos de la cuota de Codex/ChatGPT que ya tengas disponible; esa cuota tiene límites y no se compra capacidad adicional automáticamente.
+Herramienta personal para adjuntar un Word/PDF y su programa, conservar íntegro el contenido y obtener audio en CPU dentro de la cuota existente de Codex. Sin APIs comerciales, hosting, Supabase ni procesamiento en tu PC.
 
-Se conserva la aplicación Next/FastAPI anterior, sus adaptadores y pruebas como implementación legacy opcional. **No es necesario levantarla para producir un podcast.** El flujo nuevo no importa su DB/Storage, no llama Gemini/ElevenLabs y no crea servicios persistentes.
+El flujo actual está explicado en **[Lectura fiel e importación DOCX/PDF](docs/PERSONAL_READING.md)**. El modo documental de dos profesores sigue disponible como opción.
 
-- [Operación cloud gratuita y privada](docs/FREE_CLOUD.md)
-- [Investigación TTS y licencias](docs/OPEN_TTS.md)
-- [Calidad medida y limitaciones](docs/FREE_QUALITY.md)
-- [Arquitectura anterior, conservada como referencia](docs/ARCHITECTURE.md)
+- [Resultados reales y revisión de los 13 avisos](docs/READING_RESULTS.md).
+- [Operación privada y costo adicional cero](docs/FREE_CLOUD.md).
+- [Motores abiertos y licencias](docs/OPEN_TTS.md).
 
 ## Uso desde Codex Cloud
 
-Adjuntá una unidad y su programa en la conversación y pedí a Codex que use `aas.free_cloud`. Los archivos privados van en `/workspace/aas-private/`, **fuera del repositorio**, nunca en commits, issues ni parámetros públicos de Actions. Este MVP recibe Markdown/texto UTF-8; PDF/DOCX y OCR siguen pendientes de una importación estructurada y validada.
+Adjuntá una unidad y su programa en la conversación y pedí a Codex que use `aas.free_cloud`. Los archivos privados van en `/workspace/aas-private/`, **fuera del repositorio**, nunca en commits, issues ni parámetros públicos de Actions. Se admiten DOCX, PDF textual y Markdown/texto. PDF escaneado se detecta y bloquea; OCR no está habilitado.
 
 Preparación del entorno (dentro de Codex, no en tu PC):
 
@@ -28,9 +27,9 @@ Producción, desde `studio/backend`:
 
 ```bash
 ../.venv/bin/python -m aas.free_cloud prepare \
-  --source /workspace/aas-private/inbox/unidad.md \
+  --source /workspace/aas-private/inbox/unidad.docx \
   --program /workspace/aas-private/inbox/programa.md \
-  --workdir /workspace/aas-private/mi-episodio
+  --workdir /workspace/aas-private/mi-episodio --mode reading --voice-count 1
 ```
 
 Revisar `review.json`, `plan.json`, `script-draft.md` y `coverage-draft.json`. No se sintetiza hasta auditar y aprobar explícitamente:
@@ -43,7 +42,7 @@ Revisar `review.json`, `plan.json`, `script-draft.md` y `coverage-draft.json`. N
   --models /workspace/aas-private/models --asr --threads 2
 ```
 
-Voces predeterminadas: Kokoro `ef_dora` y `em_alex`, españolas y distintas. Se conserva íntegra la fuente, agrupando líneas cercanas para dar contexto a la voz; no se resume. El informe no certifica vigencia jurídica ni acento argentino. Ver evaluación.
+Lectura fiel usa una voz por defecto (Kokoro `ef_dora`); con dos voces se alterna por capítulo. El modo `--mode documentary` conserva el diálogo anterior con `ef_dora`/`em_alex`. Se conserva íntegra la fuente, agrupando líneas cercanas para dar contexto a la voz; no se resume. El informe no certifica vigencia jurídica ni acento argentino. Ver evaluación.
 
 El resultado privado contiene `academic-audio.zip`, `deliverables/podcast.mp3`, MP3 por capítulo, guion Markdown/JSON e informe de cobertura/audio. Codex entrega enlaces de descarga a estos archivos. `aas.delivery.download_bundle` prueba además una descarga HTTP efímera interna, verifica SHA-256 y extrae el MP3; no deja un servidor corriendo ni hace una publicación.
 
@@ -71,4 +70,4 @@ El repositorio público guarda **sólo código, tests, documentación y la muest
 AAS_OPEN_MODEL_DIR=/workspace/aas-private/models ../.venv/bin/python -m pytest -q
 ```
 
-La suite conserva las 21 pruebas anteriores y añade pruebas de privacidad, capítulos, versiones, regeneración, descarga real y dos voces Kokoro en CPU. Sin pesos configurados, el test neural se marca **skipped**, no aprobado. Los contratos de los adaptadores comerciales anteriores siguen simulados y no consumen sus APIs.
+La suite conserva las 37 pruebas del MVP gratuito anterior y añade pruebas de privacidad, capítulos, versiones, regeneración, descarga real y dos voces Kokoro en CPU. Sin pesos configurados, el test neural se marca **skipped**, no aprobado. Los contratos de los adaptadores comerciales anteriores siguen simulados y no consumen sus APIs.

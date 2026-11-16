@@ -1,0 +1,89 @@
+{
+  "counts": {
+    "representation_only": 7,
+    "likely_recognizer_error": 3,
+    "pending_audio_review": 3
+  },
+  "segments": [
+    {
+      "id": "s2",
+      "classification": "pending_audio_review",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s6",
+      "classification": "likely_recognizer_error",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s9",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s13",
+      "classification": "likely_recognizer_error",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s16",
+      "classification": "pending_audio_review",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s19",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s21",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s29",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s31",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s33",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s35",
+      "classification": "representation_only",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s37",
+      "classification": "likely_recognizer_error",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    },
+    {
+      "id": "s38",
+      "classification": "pending_audio_review",
+      "human_listening": false,
+      "confirmed_tts_error": false
+    }
+  ],
+  "method": "Whisper-small int8 CPU, no reference prompt, measured-silence windows",
+  "note": "Aggregate evidence from the previous public sample only. Full transcripts/audio remain private."
+}

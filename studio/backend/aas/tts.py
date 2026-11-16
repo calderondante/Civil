@@ -150,7 +150,7 @@ def probe(path):
     return float(json.loads(r.stdout)['format']['duration'])
 
 
-def join_audio(paths, output):
+def join_audio(paths, output, *, pause_seconds=.12):
     """Normalize each turn, fade only 8 ms at edges, add 120 ms pause; no speech overlap."""
     normalized = []
     for i, path in enumerate(paths):
@@ -159,7 +159,7 @@ def join_audio(paths, output):
         if duration <= .02:
             raise ValueError('Segmento vacío o truncado.')
         subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', str(path), '-af',
-                        f'aresample=24000,afade=t=in:d=0.008,afade=t=out:st={max(0,duration-.008)}:d=0.008,apad=pad_dur=0.12',
+                        f'aresample=24000,afade=t=in:d=0.008,afade=t=out:st={max(0,duration-.008)}:d=0.008,apad=pad_dur={pause_seconds}',
                         '-ac', '1', '-c:a', 'pcm_s16le', str(dest)], check=True, capture_output=True)
         normalized.append(dest)
     concat = output.parent / 'concat.txt'

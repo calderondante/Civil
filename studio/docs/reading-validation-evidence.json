@@ -1,0 +1,52 @@
+{
+  "original_word_paragraphs": 83,
+  "imported_word_paragraphs": 83,
+  "pdf_pages": 5,
+  "source_words": 1483,
+  "mode": "reading",
+  "voices": [
+    "kokoro:ef_dora"
+  ],
+  "segments": 15,
+  "chapters": 8,
+  "duration_seconds": 686.208,
+  "coverage_percent": 100.0,
+  "asr_matches": 2,
+  "unresolved_ids": [
+    "s2",
+    "s3",
+    "s4",
+    "s6",
+    "s7",
+    "s8",
+    "s9",
+    "s10",
+    "s11",
+    "s12",
+    "s13",
+    "s14",
+    "s15"
+  ],
+  "audio_status": "unverified",
+  "actual_interruption_exit": -15,
+  "recovered_cached_segments": 3,
+  "selectively_changed_ids": [
+    "s7",
+    "s8",
+    "s9",
+    "s10",
+    "s11"
+  ],
+  "untouched_audio_segments": 10,
+  "original_binary_sha256": "7b8aa0a16db74d3981131272e81bece05d42d5ab8802e4f83cb3531a047cfbea",
+  "signal": {
+    "seconds": 686.174,
+    "sample_rate": 48000,
+    "finite": true,
+    "peak": 0.81245,
+    "clipped_fraction": 0.0,
+    "rms_dbfs": -16.03,
+    "note": "Signal integrity only; not an accent or naturalness score."
+  },
+  "notes": "Real complete Unit 9 from existing guide; DOCX/PDF generated from it for validation. No new user file or official programme was attached. No human listening certification."
+}

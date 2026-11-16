@@ -1,3 +1,5 @@
+> Ensayo anterior del MVP gratuito. Las funciones actuales de Lectura fiel, DOCX/PDF y la revisión posterior están en [PERSONAL_READING.md](PERSONAL_READING.md) y [READING_RESULTS.md](READING_RESULTS.md).
+
 # Calidad: audio real, sin APIs pagas
 
 ## Qué se ejecutó

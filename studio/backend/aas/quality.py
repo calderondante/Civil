@@ -1,38 +1,85 @@
-"""Objective CPU checks. No simulated listening score or certification of accent."""
+"""Traceable comparison; mismatches never establish an error in the synthesizer alone."""
 
 import re
-import unicodedata
+from difflib import SequenceMatcher
+from .normalization import canonicalize, plain, MARKERS
+
+QUALITY_VERSION = "es-legal-v2.1"
 
 
 def words(text):
-    text = "".join(
-        c
-        for c in unicodedata.normalize("NFKD", text.casefold())
-        if not unicodedata.combining(c)
-    )
-    return re.findall(r"\w+", text)
+    return re.findall(r"\w+", plain(text))
 
 
-def assess_transcript(expected, actual):
-    a, b = words(expected), words(actual)
+def distance(a, b):
     row = list(range(len(b) + 1))
     for i, x in enumerate(a, 1):
         next_row = [i]
         for j, y in enumerate(b, 1):
             next_row.append(min(next_row[-1] + 1, row[j] + 1, row[j - 1] + (x != y)))
         row = next_row
-    wer = row[-1] / max(1, len(a))
-    numbers_a = re.findall(r"\b\d+\b", expected)
-    numbers_b = re.findall(r"\b\d+\b", actual)
-    neg_a = [x for x in a if x in ("no", "nunca", "salvo", "excepto")]
-    neg_b = [x for x in b if x in ("no", "nunca", "salvo", "excepto")]
+    return row[-1] / max(1, len(a))
+
+
+def assess_transcript(expected, actual):
+    x, y = canonicalize(expected), canonicalize(actual)
+    a, b = x["tokens"], y["tokens"]
+    raw_wer = distance(words(expected), words(actual))
+    wer = distance(a, b)
+    differences = []
+    marker_edits = False
+    for op, i, j, k, l in SequenceMatcher(None, a, b, autojunk=False).get_opcodes():
+        if op == "equal":
+            continue
+        changed = a[i:j] + b[k:l]
+        if any(token in MARKERS for token in changed):
+            marker_edits = True
+        differences.append(
+            {"operation": op, "expected_tokens": a[i:j], "recognized_tokens": b[k:l]}
+        )
+    numeric = x["numbers"] == y["numbers"] and not (
+        x["ambiguous_numbers"] or y["ambiguous_numbers"]
+    )
+    neg = x["markers"] == y["markers"] and not marker_edits
+    terms = x["legal_terms"] == y["legal_terms"]
+    articles = x["articles"] == y["articles"]
+    units = x["units"] == y["units"]
+    substantial = not (numeric and neg and terms and articles and units)
+    # A small WER is useful for ranking, never a license to silently accept missing words.
+    passed = bool(a and b) and a == b and not substantial
     return {
-        "passed": wer <= 0.12 and numbers_a == numbers_b and neg_a == neg_b,
+        "passed": passed,
+        "status": "match_after_normalization"
+        if passed
+        else "substantial_difference"
+        if substantial
+        else "residual_difference",
         "word_error_rate": round(wer, 4),
-        "numbers_match": numbers_a == numbers_b,
-        "negations_match": neg_a == neg_b,
-        "method": "independent Whisper-base CPU, punctuation/diacritics normalized; no reference prompt",
-        "limitations": "ASR error is not proof of TTS error; number words versus digits can cause a conservative rejection.",
+        "raw_word_error_rate": round(raw_wer, 4),
+        "numbers_match": numeric,
+        "negations_match": neg,
+        "article_references_match": articles,
+        "legal_terms_match": terms,
+        "units_match": units,
+        "substantial_difference": substantial,
+        "differences": differences,
+        "normalization": {
+            "version": QUALITY_VERSION,
+            "expected": x["normalizations"],
+            "recognized": y["normalizations"],
+        },
+        "critical_values": {
+            "expected": {
+                k: x[k]
+                for k in ("numbers", "articles", "markers", "legal_terms", "units")
+            },
+            "recognized": {
+                k: y[k]
+                for k in ("numbers", "articles", "markers", "legal_terms", "units")
+            },
+        },
+        "method": "offline ASR versus script; value/order/sign/units/articles/negations/legal terms checked explicitly",
+        "limitations": "No listening certification. A discrepancy can come from ASR or TTS. Residual word changes require review even below a WER threshold.",
     }
 
 
@@ -52,5 +99,5 @@ def acoustic_metrics(path):
         "rms_dbfs": round(
             float(20 * np.log10(max(1e-12, np.sqrt(np.mean(samples * samples))))), 2
         ),
-        "note": "Signal integrity only; not a MOS/naturalness or Argentine-accent score.",
+        "note": "Signal integrity only; not an accent or naturalness score.",
     }

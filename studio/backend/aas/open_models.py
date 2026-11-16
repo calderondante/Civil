@@ -8,6 +8,10 @@ import urllib.request
 from pathlib import Path
 
 ASSETS = {
+    "sherpa-onnx-whisper-small.tar.bz2": (
+        "https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-small.tar.bz2",
+        "486a46afbb7ba798507190ffe02fea2dd726049af212e774537efac6afb210a6",
+    ),
     "kokoro-v1.0.onnx": (
         "https://github.com/thewh1teagle/kokoro-onnx/releases/download/model-files-v1.1/kokoro-v1.0.onnx",
         "beb0d1848dee9a49da392cc3df26958d46cfa35d321edf434f52949153f0df3a",
@@ -32,7 +36,7 @@ def file_hash(path):
         return hashlib.file_digest(f, "sha256").hexdigest()
 
 
-def setup_models(directory, *, piper=False, asr=False):
+def setup_models(directory, *, piper=False, asr=False, review=False):
     root = Path(directory).resolve()
     root.mkdir(parents=True, exist_ok=True)
     names = ["kokoro-v1.0.onnx", "voices-v1.0.bin"]
@@ -40,6 +44,8 @@ def setup_models(directory, *, piper=False, asr=False):
         names.append("vits-piper-es_AR-daniela-high.tar.bz2")
     if asr:
         names.append("sherpa-onnx-whisper-base.tar.bz2")
+    if review:
+        names.append("sherpa-onnx-whisper-small.tar.bz2")
     manifest = {}
     for name in names:
         url, expected = ASSETS[name]
@@ -204,19 +210,21 @@ def verify_extraction(archive, root):
 
 
 class OpenASR:
-    def __init__(self, directory, threads=2):
+    def __init__(self, directory, threads=2, size="base"):
         import sherpa_onnx as so
 
         root = Path(directory).resolve()
-        name = "sherpa-onnx-whisper-base.tar.bz2"
+        if size not in ("base", "small"):
+            raise ValueError("unsupported_offline_asr_size")
+        name = f"sherpa-onnx-whisper-{size}.tar.bz2"
         if file_hash(root / name) != ASSETS[name][1]:
             raise ValueError("asr_checksum_mismatch")
         verify_extraction(root / name, root)
-        p = root / "sherpa-onnx-whisper-base"
+        p = root / f"sherpa-onnx-whisper-{size}"
         self.recognizer = so.OfflineRecognizer.from_whisper(
-            encoder=str(p / "base-encoder.int8.onnx"),
-            decoder=str(p / "base-decoder.int8.onnx"),
-            tokens=str(p / "base-tokens.txt"),
+            encoder=str(p / f"{size}-encoder.int8.onnx"),
+            decoder=str(p / f"{size}-decoder.int8.onnx"),
+            tokens=str(p / f"{size}-tokens.txt"),
             language="es",
             task="transcribe",
             num_threads=threads,
@@ -247,11 +255,11 @@ class OpenASR:
         ).stdout
         samples = np.frombuffer(raw, dtype="<f4")
         if len(samples) > 16000 * 29:
-            # Independent windows, never silently truncate material longer than Whisper's context.
-            pieces = []
-            for start in range(0, len(samples), 16000 * 25):
-                pieces.append(self._decode(samples[start : start + 16000 * 25]))
-            return " ".join(pieces)
+            # Cut at a measured quiet interval rather than blindly through a word.
+            # No samples disappear: adjacent windows exactly partition the input.
+            return " ".join(
+                self._decode(samples[a:b]) for a, b in speech_windows(samples, 16000)
+            )
         return self._decode(samples)
 
     def _decode(self, samples):
@@ -259,3 +267,24 @@ class OpenASR:
         stream.accept_waveform(16000, samples)
         self.recognizer.decode_stream(stream)
         return stream.result.text.strip()
+
+
+def speech_windows(samples, rate):
+    import numpy as np
+
+    start = 0
+    bounds = []
+    while len(samples) - start > 29 * rate:
+        a = start + 18 * rate
+        b = start + 25 * rate
+        frame = max(1, rate // 50)
+        levels = [
+            (float(np.mean(samples[i : i + frame] ** 2)), i) for i in range(a, b, frame)
+        ]
+        quiet = [(level, i) for level, i in levels if level < 0.00004]
+        stop = (quiet[-1][1] + frame // 2) if quiet else min(levels)[1] + frame // 2
+        bounds.append((start, stop))
+        start = stop
+    if start < len(samples):
+        bounds.append((start, len(samples)))
+    return bounds

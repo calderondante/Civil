@@ -18,7 +18,7 @@ def tokens(text):
     return set(re.findall(r'\w{3,}', normalize(text))) - {'los', 'las', 'del', 'una', 'por', 'con', 'para', 'que', 'como', 'son'}
 
 
-def parse_source(markdown):
+def parse_source(markdown, include_headings=False):
     """Offsets address the immutable original, including original Markdown punctuation."""
     blocks, heading, hierarchy = [], 'Unidad', {}
     for match in re.finditer(r'[^\n]+', markdown):
@@ -30,6 +30,9 @@ def parse_source(markdown):
             level = len(line) - len(line.lstrip('#'))
             hierarchy = {k: v for k, v in hierarchy.items() if k < level}
             hierarchy[level] = heading
+            if include_headings:
+                start=match.start()+len(re.match(r'^#+\s+',line).group())
+                blocks.append({'id':f'b{len(blocks)+1}','heading':heading,'path':list(hierarchy.values()),'text':markdown[start:match.end()], 'start':start,'end':match.end(),'line':markdown.count('\n',0,start)+1,'kind':'heading'})
             continue
         # Bounded spans; never drop the tail, even when a sentence exceeds the limit.
         start, end = match.start(), match.end()
@@ -102,6 +105,8 @@ def audit(episode):
         if sid in seen:
             issue('duplicate_id', 'Identificador de segmento repetido.', sid)
         seen.add(sid)
+        if episode.get('mode')=='reading' and seg['kind']!='source':
+            issue('reading_inserted_content','Lectura fiel sólo admite texto de la fuente, sin preguntas ni añadidos.',sid)
         if seg['speaker'] not in ('profesora', 'profesor'):
             issue('voice', 'Voz desconocida.', sid)
         refs = seg['source_ids']
@@ -119,7 +124,7 @@ def audit(episode):
                 issue('source_integrity', 'La fuente o sus offsets fueron alterados.', sid)
         if seg['kind'] == 'source':
             expected = '\n'.join(blocks[r]['text'] for r in refs)
-            if normalize(seg['text']) != normalize(expected):
+            if (seg['text'] != expected if episode.get('mode')=='reading' else normalize(seg['text']) != normalize(expected)):
                 issue('unsupported_claim', 'Cambio doctrinario, contradicción o afirmación sin respaldo literal. Restaurá la cita o incorporá una fuente.', sid)
             else:
                 valid_blocks.update(refs)
@@ -140,6 +145,10 @@ def audit(episode):
     for b in blocks:
         if b not in valid_blocks:
             issue('source_omission', f'Falta desarrollar el bloque {b}, línea {blocks[b]["line"]}.')
+    if episode.get('mode')=='reading':
+        ordered=[ref for seg in episode['segments'] for ref in seg['source_ids']]
+        if ordered!=list(blocks):issue('reading_order_or_duplicate','La lectura debe conservar todos los bloques en su orden original, exactamente una vez.')
+        if episode.get('voice_count',1)==1 and any(s['speaker']!='profesora' for s in episode['segments']):issue('reading_voice','La narración de una voz no puede alternar locutores.')
     coverage = []
     for p in episode['points']:
         ids = episode['mapping'].get(p['id'], [])
@@ -167,7 +176,8 @@ def repair(episode):
 
 
 def revision_hash(episode):
-    return digest({k: episode[k] for k in ('source', 'program', 'mapping', 'segments', 'wpm', 'target_minutes', 'pronunciation')})
+    fields=('source', 'program', 'mapping', 'segments', 'wpm', 'target_minutes', 'pronunciation','mode','voice_count','import_fingerprint')
+    return digest({k:episode[k] for k in fields if k in episode})
 
 
 def compare_transcript(expected, actual):
