@@ -5,7 +5,7 @@
 - Instalación Python en virtualenv nuevo desde lockfile; Node/npm con lockfile. FFmpeg y Chromium reales.
 - Suite backend (21 pruebas automatizadas): cobertura obligatoria, partición sin pérdida (incluido final de párrafos largos), offsets y asociaciones, títulos padre, alteración de artículos, ejemplos sin respaldo, invalidación de aprobación, concurrencia de versiones, autenticación/límite de tamaño, reparación documentada, audio local, caché/regeneración selectiva, descarga de versiones antiguas y recuperación de lease.
 - Prueba de navegador Chromium con la build de producción Next: cargar unidad/programa, matriz 100% estructural, revisar/aprobar, generar MP3 real con dos voces, descargar audio/informe, bloquear publicación sin ASR y verificar diseño móvil sin desborde ni errores JavaScript.
-- Resultado de esa prueba: **649,776 segundos (10 min 49,8 s)**, **104 segmentos**, dos variantes eSpeak `es`/`es+f3`, **10.396.844 bytes**, **100% de cobertura estructural**, `audio_status=unverified`. No es evaluación de naturalidad/acento ni confirmación de contenido jurídico.
+- Resultado de esa prueba: **649,680 segundos (10 min 49,7 s)**, **104 segmentos**, dos variantes eSpeak `es`/`es+f3`, **10.395.308 bytes**, **100% de cobertura estructural**, `audio_status=unverified`. No es evaluación de naturalidad/acento ni confirmación de contenido jurídico.
 - El script de navegador y la evidencia resumida están versionados. El MP3, guion y JSON completos están en `web/data/` ignorados por Git.
 - `npm run build` compila TypeScript y genera el sitio. `npm audit --omit=dev --audit-level=high` no encontró vulnerabilidades en la ejecución registrada.
 

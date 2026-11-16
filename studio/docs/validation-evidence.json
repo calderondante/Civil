@@ -1,11 +1,11 @@
 {
-  "job_id": "9c287dea-7316-4db1-8fb5-ca8174985e17",
+  "job_id": "2fa0d00e-2115-497a-8cd0-c81403c5dc6c",
   "provider": "local",
   "model": "espeak-ng-loader-0.2.4",
   "audio_status": "unverified",
-  "duration_seconds": 649.776,
+  "duration_seconds": 649.68,
   "duration_on_target": true,
-  "revision_hash": "4b36e73e3df42b86db0a639a9c0d9f7a3cca589f09407c2ba2efb3b1f80085fc",
+  "revision_hash": "b490e787d8604ca3a9247cccd7a9ae4ba850b03f0856e982884ce887b5fc07ca",
   "coverage_percent": 100,
   "segments": 104,
   "voices": [

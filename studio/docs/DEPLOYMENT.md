@@ -15,6 +15,8 @@ La instalación local fue ejecutada. **Los despliegues remotos, Docker y Supabas
 3. En API y worker: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_BUCKET=academic-audio`. La service role sólo se usa del lado servidor para Storage. La conexión DB usa el rol server de la cadena, no la clave REST de service role.
 4. Usar el mismo proyecto en API y worker. El servidor descarga desde el bucket con credenciales privadas; el navegador recibe los bytes después de autenticarse. No hay URLs públicas permanentes.
 
+El archivo `.env` lo consume Docker Compose; Python y Next no leen automáticamente el mismo archivo ubicado en `studio/`. En ejecución manual exportar las variables en cada proceso o usar el gestor de secretos del host.
+
 ## API y worker cloud
 
 Usar `Dockerfile.backend` con contexto `studio/`, o instalar `backend/requirements.lock` y FFmpeg en el host. API: `python -m uvicorn aas.api:app --host 0.0.0.0 --port 8010`; worker: `python -m aas.worker`. Ambos desde el directorio donde está `aas/`.
