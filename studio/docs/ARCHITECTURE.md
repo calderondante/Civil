@@ -1,3 +1,5 @@
+> Referencia de la versión anterior. El flujo actual de costo adicional cero está en [FREE_CLOUD.md](FREE_CLOUD.md); hosting, Supabase y APIs comerciales no son requisitos ni se usan en ese flujo.
+
 # Arquitectura
 
 ```mermaid

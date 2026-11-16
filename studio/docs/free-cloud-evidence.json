@@ -1,0 +1,47 @@
+{
+  "duration_seconds": 607.848,
+  "segments": 38,
+  "chapters": 8,
+  "coverage_percent": 100.0,
+  "asr_passed_segments": 25,
+  "asr_review_segment_ids": [
+    "s2",
+    "s6",
+    "s9",
+    "s13",
+    "s16",
+    "s19",
+    "s21",
+    "s29",
+    "s31",
+    "s33",
+    "s35",
+    "s37",
+    "s38"
+  ],
+  "weighted_asr_word_error_rate": 0.0906,
+  "audio_status": "unverified",
+  "voices": [
+    "kokoro:ef_dora",
+    "kokoro:em_alex"
+  ],
+  "download": {
+    "download_verified": true,
+    "zip_bytes": 18891244,
+    "mp3_bytes": 9725996,
+    "sha256": "f30506ae9549148683433c9f64081a6c7a78fa369f543332cf448455b05f1fd8"
+  },
+  "signal": {
+    "seconds": 607.815,
+    "sample_rate": 48000,
+    "finite": true,
+    "peak": 0.81246,
+    "clipped_fraction": 0.0,
+    "rms_dbfs": -16.06,
+    "note": "Signal integrity only; not a MOS/naturalness or Argentine-accent score."
+  },
+  "selective_regeneration": {
+    "new_segments": 1,
+    "reused_segments_in_selected_chapter": 3
+  }
+}

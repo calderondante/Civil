@@ -1,3 +1,5 @@
+> Referencia de la versión anterior. El flujo actual de costo adicional cero está en [FREE_CLOUD.md](FREE_CLOUD.md); hosting, Supabase y APIs comerciales no son requisitos ni se usan en ese flujo.
+
 # Investigación técnica — 15 de noviembre de 2026
 
 Esta evaluación se basa en lecturas reales de las fuentes enlazadas. No se clonó ninguno de los tres repositorios ni se incorporó su código. Se inspeccionaron README, licencias, código de generación/orquestación y el patch del HEAD publicado. La API de GitHub respondió Forbidden, pero las páginas y archivos públicos fueron accesibles. Un commit reciente de documentación no equivale a mantenimiento activo del motor. Los hashes de las fuentes consultadas se registran en `research-sources.json`.

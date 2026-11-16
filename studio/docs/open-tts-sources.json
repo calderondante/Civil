@@ -1,0 +1,38 @@
+{
+  "sources": [
+    {
+      "url": "https://raw.githubusercontent.com/thewh1teagle/kokoro-onnx/main/README.md",
+      "sha256": "26c1abe64de52f1c22fe17e95b45c5aa3767604ab704ee851994d22c7c4e6582"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/thewh1teagle/kokoro-onnx/main/LICENSE",
+      "sha256": "f61fdd0217de9ece8fa699912848d91187d84879fc2e689f0906d0c1299e955e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/OHF-Voice/piper1-gpl/main/README.md",
+      "sha256": "f28e62881ff657e3fe5a5dd8cf869a910c0b145f8a90b1bda8a07fc5ca9bed7e"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/OHF-Voice/piper1-gpl/main/COPYING",
+      "sha256": "0ae0485a5bd37a63e63603596417e4eb0e653334fa6c7f932ca3a0e85d4af227"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/rhasspy/piper/master/VOICES.md",
+      "sha256": "4ce53d3bfb2460ab7ef2bc42c2a651912bf270da700afd62c81390fcaed133a5"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/hexgrad/kokoro/main/LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/github/docs/main/content/actions/how-tos/manage-workflow-runs/download-workflow-artifacts.md",
+      "sha256": "3a711cbf33f787d11d1d0e7b08ba1593b1989df146c9ca8d162136c17e149004"
+    },
+    {
+      "url": "https://raw.githubusercontent.com/github/docs/main/content/billing/concepts/product-billing/github-actions.md",
+      "sha256": "1eb412764f4d7f100d3cfe923ef85d447c06c7b6dd9df78966dfe6b9b4fbd9db"
+    }
+  ],
+  "model_integrity": "Pinned byte hashes in aas/open_models.py; obtained over verified HTTPS, not independent author signatures.",
+  "blocked_host": "huggingface.co"
+}

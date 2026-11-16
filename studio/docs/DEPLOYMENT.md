@@ -1,3 +1,5 @@
+> Referencia de la versión anterior. El flujo actual de costo adicional cero está en [FREE_CLOUD.md](FREE_CLOUD.md); hosting, Supabase y APIs comerciales no son requisitos ni se usan en ese flujo.
+
 # Desplegar sin depender de Codex
 
 La instalación local fue ejecutada. **Los despliegues remotos, Docker y Supabase no se ejecutaron aquí.** Los archivos son configuración revisable, no evidencia de publicación.

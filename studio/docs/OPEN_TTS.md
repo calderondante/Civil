@@ -1,0 +1,23 @@
+# TTS abierto para CPU: investigación y decisión
+
+Fuentes leídas realmente por HTTPS; sin clonar repositorios ni comprar servicios. Los modelos se descargaron de GitHub Releases, con hashes fijados en `aas/open_models.py`. Estos hashes se calcularon sobre las descargas por TLS y fijan reproducibilidad; no se presentan como firmas independientes del autor ni como una auditoría del corpus de entrenamiento.
+
+| Alternativa | Arquitectura, mantenimiento observado | Licencias y uso comercial | Español / prueba |
+|---|---|---|---|
+| [Kokoro](https://github.com/hexgrad/kokoro) + [kokoro-onnx](https://github.com/thewh1teagle/kokoro-onnx) | Modelo 82M, ejecución ONNX CPU, sin PyTorch/CUDA. PyPI consultado: kokoro 0.9.4 (05/04/2025), kokoro-onnx 0.6.1 (19/08/2026). No confundir fecha de paquete con garantía de soporte. | Core Apache 2.0 comprobado; wrapper ONNX MIT comprobado; distribuidor declara modelo Apache 2.0. Estas licencias permiten uso comercial bajo sus condiciones. G2P incluye eSpeak NG GPL: revisar distribución del binario y avisos; el derecho sobre cada documento es independiente. No se auditaron derechos de cada ejemplo de entrenamiento. | Probado realmente: `ef_dora`, `em_alex`, `em_santa`, idioma `es`. Dora/Alex elegidas por la prueba de inteligibilidad. No hay garantía documentada de que sean voces argentinas. |
+| [Piper actual](https://github.com/OHF-Voice/piper1-gpl) / VITS con [sherpa-onnx](https://github.com/k2-fsa/sherpa-onnx) | Inferencia CPU de modelos pequeños. PyPI piper-tts 1.8.0 (04/09/2026), sherpa-onnx 2.0.1 (27/10/2026). Se leyó README, GPL y listado de voces; se ejecutó el modelo argentino distribuido por sherpa. | Motor Piper GPL-3.0-or-later; sherpa runtime Apache 2.0. La ficha de `es_AR-daniela-high` dice corpus Attribution-ShareAlike 4.0 y finetuning de Lessac. **Licencia de corpus no equivale a una autorización explícita uniforme de todos los pesos**: no se lo presenta como libre de obligaciones comerciales. Atribución/ShareAlike requieren revisión específica antes de redistribuir. | La ficha declara “Spanish, Argentina” aunque su campo de idioma dice `es_ES`. Sólo una hablante en ese modelo. Se logró voz en CPU con frontend externo; la muestra tuvo más errores ASR y no pasó el umbral. No quedó habilitada como voz de producción del CLI. Esto evalúa esta integración y muestra, no todas las voces Piper. |
+| eSpeak NG | CPU, determinista, ya estaba instalado. Conservado en tests y código anterior. | GPL-3.0-or-later. Uso comercial posible cumpliendo obligaciones; no es una licencia propietaria por minuto. | Voz real, pero robótica; no elegida para el podcast nuevo. Sin fallback silencioso desde Kokoro. |
+| [CosyVoice](https://github.com/FunAudioLLM/CosyVoice) | Ofrece español y clonación; stack y modelos mayores. Referencia del estudio anterior. | Código Apache, pesos/voces requieren examen separado. No se descargó ni validó aquí. | No elegido por complejidad/costo de ejecución frente a Kokoro CPU; no se afirma que necesite obligatoriamente GPU comercial. |
+| [Chatterbox](https://github.com/resemble-ai/chatterbox) | El README consultado previamente declaraba archivo sin soporte. Modelos mayores, variantes Latam/es-ES. | Código MIT no acredita todos los pesos/voces; no revalidado acústicamente aquí. | No elegido. Latam no equivale automáticamente a rioplatense. |
+
+## Archivos usados
+
+- [Kokoro modelo/voces](https://github.com/thewh1teagle/kokoro-onnx/releases/tag/model-files-v1.1): 325.505.369 + 28.214.398 bytes. Identidad exacta en el manifiesto de código. No se suben los pesos al repositorio.
+- [Piper Argentina](https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-es_AR-daniela-high.tar.bz2): archivo 115.562.134 bytes, sólo investigación; ficha de modelo incluida en el archivo.
+- [Whisper-base](https://github.com/k2-fsa/sherpa-onnx/releases/download/asr-models/sherpa-onnx-whisper-base.tar.bz2): archivo 207.557.382 bytes; encoder/decoder int8 en CPU. [Whisper](https://github.com/openai/whisper) publica código/pesos bajo MIT; runtime sherpa Apache.
+
+## Costo y decisión
+
+No hay tarifa por carácter ni por API. El cómputo consume la cuota ya disponible de Codex. Se usan dos hilos por defecto y pesos reutilizables; capítulos y caché evitan volver a sintetizar lo correcto. No se provisiona GPU, VM comercial ni alojamiento. Si falta cuota, detener; no habilitar una alternativa paga.
+
+Kokoro Dora/Alex es la selección práctica actual para inteligibilidad en español y licencias permisivas declaradas. No se ofrece todavía la promesa de “dos profesores argentinos naturales”. La calidad de acento necesita escucha humana argentina; se incluyen muestras descargables y evaluación objetiva, sin inventar un puntaje subjetivo.
