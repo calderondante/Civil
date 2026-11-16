@@ -90,6 +90,10 @@ def load(root, relative):
 
 
 def verify_imports(root, ep):
+    if ep.get("mode") == "magistral_dialogue":
+        from .magistral import verify_sources
+
+        return verify_sources(root, ep)
     imports = None
     if "import_fingerprint" in ep:
         imports = {
@@ -124,6 +128,8 @@ def actions_privacy_guard(source=None, program=None, public_demo=False):
 
 
 def chapters_for(episode, max_words=1200):
+    if episode.get("mode") == "magistral_dialogue":
+        return episode["chapter_plan"]
     if not 100 <= max_words <= 15000:
         raise FreeCloudError("invalid_chapter_word_limit")
     blocks = {b["id"]: b for b in episode["blocks"]}
@@ -395,6 +401,12 @@ def approve(
         "mode",
         "voice_count",
         "import_fingerprint",
+        "claim_inventory",
+        "editorial_reviews",
+        "cross_source_decisions",
+        "scope",
+        "source_documents",
+        "chapter_plan",
     ):
         if key in original and proposal.get(key) != original[key]:
             raise FreeCloudError("immutable_source_modified")
@@ -460,6 +472,30 @@ def export_script(root, filename, episode):
         for s in episode["segments"]
     )
     return write_bytes(root, filename, text.encode())
+
+
+def export_secondary_review(root, report):
+    """Bundle only a second recognition bound to these exact audio hashes."""
+    if not private_path(root, "audio-review/review.json").is_file():
+        return []
+    from .quality import QUALITY_VERSION
+
+    review = load(root, "audio-review/review.json")
+    hashes = {r["segment_id"]: r["sha256"] for r in report["segments"]}
+    if (
+        review.get("revision") != report["revision"]
+        or review.get("normalizer") != QUALITY_VERSION
+        or any(hashes.get(r["segment_id"]) != r["audio_sha256"] for r in review["rows"])
+    ):
+        return []
+    exported = copy.deepcopy(review)
+    for row in exported["rows"]:
+        row.pop("clip", None)
+    exported["note"] += (
+        " WAV review clips remain in the private workspace; listen using the complete MP3 and segment IDs."
+    )
+    save(root, "deliverables/secondary-asr-review.json", exported)
+    return ["secondary-asr-review.json"]
 
 
 @contextmanager
@@ -555,6 +591,18 @@ def render(
             "segments",
             "mapping",
             "pronunciation",
+            *(
+                [
+                    "claim_inventory",
+                    "editorial_reviews",
+                    "cross_source_decisions",
+                    "scope",
+                    "source_documents",
+                    "chapter_plan",
+                ]
+                if ep.get("mode") == "magistral_dialogue"
+                else []
+            ),
         )
     ):
         raise FreeCloudError("review_has_unapproved_edits")
@@ -611,6 +659,7 @@ def render(
         paths = []
         for sid in chapter["segment_ids"]:
             segment = segments[sid]
+            rate = segment.get("rate_wpm", ep["wpm"])
             voice = voice_map[segment["speaker"]]
             from .speech import compile_speech
 
@@ -620,7 +669,7 @@ def render(
                 {
                     "spoken": text,
                     "voice": identities[segment["speaker"]],
-                    "wpm": ep["wpm"],
+                    "wpm": rate,
                     "version": engines.version,
                 }
             )
@@ -644,7 +693,7 @@ def render(
                         wav.read_bytes(),
                     )
                 with private_engine_log(root):
-                    audio = engines.synthesize(text, voice, ep["wpm"])
+                    audio = engines.synthesize(text, voice, rate)
                 wav = write_bytes(root, rel, audio)
                 save(root, f"cache/{cache_key}.json", {"sha256": file_hash(wav)})
                 generated += 1
@@ -694,6 +743,7 @@ def render(
                 "cached": cached,
                 "seconds": probe(wav),
                 "spoken_text": text,
+                "rate_wpm": rate,
                 "speech_transformations": speech_plan["transformations"],
                 "transcript": transcript,
                 "verification": verification,
@@ -801,6 +851,11 @@ def render(
         )
         export_script(root, f"{deliver}/script.md", ep)
         save(root, f"{deliver}/script.json", ep)
+        if ep.get("mode") == "magistral_dialogue":
+            from .magistral import export_evidence
+
+            export_evidence(root, ep)
+        secondary_exports = export_secondary_review(root, report)
         for chapter in chapters:
             write_bytes(
                 root,
@@ -819,10 +874,16 @@ def render(
                 ]
                 + (
                     ["differences.json", "transcript.txt"]
-                    if ep.get("mode") == "reading"
+                    if ep.get("mode") in ("reading", "magistral_dialogue")
+                    else []
+                )
+                + (
+                    ["claim-matrix.json", "claim-matrix.md", "source-map.json"]
+                    if ep.get("mode") == "magistral_dialogue"
                     else []
                 )
                 + [f"{c['id']}.mp3" for c in chapters]
+                + secondary_exports
             ):
                 z.write(private_path(root, f"{deliver}/{name}"), arcname=name)
         zip_path.chmod(0o600)
@@ -897,6 +958,12 @@ def recheck(directory):
             "differences.json",
             "transcript.txt",
         ] + [c["id"] + ".mp3" for c in report["plan"]]
+        if ep.get("mode") == "magistral_dialogue":
+            from .magistral import export_evidence
+
+            export_evidence(root, ep)
+            names += ["claim-matrix.json", "claim-matrix.md", "source-map.json"]
+        names += export_secondary_review(root, report)
         import io
 
         out = io.BytesIO()

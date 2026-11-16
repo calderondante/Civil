@@ -60,7 +60,14 @@ def download_bundle(directory):
             raise FreeCloudError("download_zip_corrupt")
         for name in ["podcast.mp3", "script.md", "script.json", "coverage-audio.json"]:
             write_bytes(root, "downloads/" + name, z.read(name))
-        for name in ("differences.json", "transcript.txt"):
+        for name in (
+            "differences.json",
+            "transcript.txt",
+            "claim-matrix.json",
+            "claim-matrix.md",
+            "source-map.json",
+            "secondary-asr-review.json",
+        ):
             if name in z.namelist():
                 write_bytes(root, "downloads/" + name, z.read(name))
         original = private_path(root, "deliverables/podcast.mp3")

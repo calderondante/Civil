@@ -1,0 +1,118 @@
+{
+  "baseline": "d0b496c",
+  "mode": "magistral_dialogue",
+  "private_sources_committed": false,
+  "commercial_api_calls": 0,
+  "samples": {
+    "admin": {
+      "source_paragraphs_selected": 27,
+      "claims": 12,
+      "reviewed_facets": 42,
+      "words": 1099,
+      "turns": 21,
+      "chapters": 3,
+      "duration_seconds": 416.568,
+      "voices": [
+        "kokoro:ef_dora",
+        "kokoro:em_alex"
+      ],
+      "ordinary_rate": 145,
+      "dense_rates": [
+        128,
+        130
+      ],
+      "consecutive_same_voice_pairs": 2,
+      "base_normalized_matches": 1,
+      "base_pending": 20,
+      "base_critical_flags": 13,
+      "acoustic": {
+        "seconds": 416.524,
+        "sample_rate": 48000,
+        "finite": true,
+        "peak": 0.80687,
+        "clipped_fraction": 0.0,
+        "rms_dbfs": -16.02,
+        "note": "Signal integrity only; not an accent or naturalness score."
+      },
+      "semantic_certified": false,
+      "human_listening": false,
+      "audio_status": "unverified",
+      "download_sha256_verified": true,
+      "regenerated_segments": 0,
+      "complete_unit": false,
+      "secondary_asr": {
+        "representation_only": 0,
+        "likely_recognizer_error": 9,
+        "pending_audio_review": 11
+      },
+      "secondary_pending_critical": 9,
+      "comparison_version": "es-legal-v2.2"
+    },
+    "contratos": {
+      "source_paragraphs_selected": 21,
+      "claims": 12,
+      "reviewed_facets": 40,
+      "words": 1135,
+      "turns": 21,
+      "chapters": 3,
+      "duration_seconds": 422.928,
+      "voices": [
+        "kokoro:ef_dora",
+        "kokoro:em_alex"
+      ],
+      "ordinary_rate": 145,
+      "dense_rates": [
+        128,
+        130
+      ],
+      "consecutive_same_voice_pairs": 3,
+      "base_normalized_matches": 3,
+      "base_pending": 18,
+      "base_critical_flags": 15,
+      "acoustic": {
+        "seconds": 422.893,
+        "sample_rate": 48000,
+        "finite": true,
+        "peak": 0.81375,
+        "clipped_fraction": 0.0,
+        "rms_dbfs": -16.02,
+        "note": "Signal integrity only; not an accent or naturalness score."
+      },
+      "semantic_certified": false,
+      "human_listening": false,
+      "audio_status": "unverified",
+      "download_sha256_verified": true,
+      "regenerated_segments": 0,
+      "complete_unit": false,
+      "secondary_asr": {
+        "representation_only": 0,
+        "likely_recognizer_error": 3,
+        "pending_audio_review": 15
+      },
+      "secondary_pending_critical": 8,
+      "comparison_version": "es-legal-v2.2"
+    }
+  },
+  "queue": {
+    "units": 12,
+    "source_institute_blocks": 358,
+    "source_review_batches": 358,
+    "reserved_contract_units": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "complete_units": 0,
+    "official_program_independently_attached": false
+  },
+  "tests": {
+    "full_suite_passed": 103,
+    "skipped": 0,
+    "new_magistral_tests": 26,
+    "real_cpu_two_voice_test": true,
+    "warning": "One existing FastAPI/Starlette TestClient deprecation warning."
+  }
+}

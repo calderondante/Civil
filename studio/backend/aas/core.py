@@ -95,6 +95,9 @@ def draft(blocks, points, mapping):
 
 
 def audit(episode):
+    if episode.get('mode')=='magistral_dialogue':
+        from .magistral import audit_dialogue
+        return audit_dialogue(episode)
     blocks = {b['id']: b for b in episode['blocks']}
     point_ids = {p['id'] for p in episode['points']}
     findings, covered, valid_blocks, seen = [], set(), set(), set()
@@ -176,7 +179,7 @@ def repair(episode):
 
 
 def revision_hash(episode):
-    fields=('source', 'program', 'mapping', 'segments', 'wpm', 'target_minutes', 'pronunciation','mode','voice_count','import_fingerprint')
+    fields=('source', 'program', 'mapping', 'segments', 'wpm', 'target_minutes', 'pronunciation','mode','voice_count','import_fingerprint','claim_inventory','editorial_reviews','cross_source_decisions','scope','source_documents','chapter_plan')
     return digest({k:episode[k] for k in fields if k in episode})
 
 

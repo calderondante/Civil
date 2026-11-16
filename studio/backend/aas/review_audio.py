@@ -23,8 +23,7 @@ def review_existing(directory, models, segment_ids=None):
         if segment_ids
         else [r for r in report["segments"] if not r["verification"]["passed"]]
     )
-    with private_engine_log(root):
-        second = OpenASR(models, threads=2, size="small")
+    second = None
     rows = []
     for record in selected:
         wav = private_path(root, record["cache_file"])
@@ -37,6 +36,8 @@ def review_existing(directory, models, segment_ids=None):
             transcript = json.loads(private_path(root, cache).read_text())["transcript"]
         else:
             with private_engine_log(root):
+                if second is None:
+                    second = OpenASR(models, threads=2, size="small")
                 transcript = second.transcribe(wav)
             save(root, cache, {"transcript": transcript})
         comparison = assess_transcript(expected, transcript)
@@ -67,6 +68,7 @@ def review_existing(directory, models, segment_ids=None):
             }
         )
     result = {
+        "revision": report["revision"],
         "normalizer": QUALITY_VERSION,
         "second_recognizer": "Whisper-small int8 CPU, no reference prompt, measured-silence windows",
         "rows": rows,

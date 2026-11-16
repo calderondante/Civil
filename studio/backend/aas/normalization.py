@@ -86,6 +86,11 @@ MARKERS = {
 LEGAL = set(
     "dolo dolor culpa error cuasidelito delito sujeto objeto causa heredero herederos sucesor sucesores acreedor deudor anulabilidad subsanacion lesion cesion nulidad nulidades inoponibilidad prescripcion caducidad discernimiento intencion intension libertad licito licitos ilicito ilicitos voluntario voluntarios involuntario involuntarios consentimiento agente hecho acto contrato testamento condicion plazo cargo imputacion antijuridicidad representacion capacidad persona personas juridico juridicos juridica juridicas".split()
 )
+# Keep the teaching samples' distinctions critical as well as visible in WER.
+# These are distinct tokens, never spelling corrections or equivalences.
+LEGAL.update(
+    "fianza fiador fiadores cofiador cofiadores excusion exclusion division solidaridad solidario solidaria subsidiario subsidiaria accesoriedad accesorio accesoria revocacion revocar sustitucion sustituir suspension suspender anulable regular irregular precario precariedad mora indemnizacion indemnizar restitucion reconduccion prorroga renovacion bis ter quater".split()
+)
 ALIASES = {
     "art": "articulo",
     "arts": "articulos",

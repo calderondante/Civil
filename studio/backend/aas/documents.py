@@ -254,9 +254,23 @@ def read_docx(path):
                 seen.add(ident)
                 p = Paragraph(child, doc)
                 raw = "".join(t.text or "" for t in child.iter(qn("w:t")))
-                if compact(raw) != compact(p.text):
+                visible = p.text
+                if next(child.iter(qn("w:fldSimple")), None) is not None:
+                    if any(x is not child for x in child.iter(qn("w:p"))):
+                        raise DocumentError("unsupported_nested_word_paragraph")
+                    visible = "".join(
+                        (x.text or "")
+                        if x.tag == qn("w:t")
+                        else "\t"
+                        if x.tag == qn("w:tab")
+                        else "\n"
+                        if x.tag in (qn("w:br"), qn("w:cr"))
+                        else ""
+                        for x in child.iter()
+                    )
+                if compact(raw) != compact(visible):
                     raise DocumentError("unsupported_word_text_container")
-                if not p.text.strip():
+                if not visible.strip():
                     continue
                 name = p.style.style_id if p.style is not None else ""
                 heading = re.search(r"(?:Heading|Titulo|Ttulo)([1-6])", name, re.I)
@@ -276,7 +290,7 @@ def read_docx(path):
                 kind = "heading" if level else "list_item" if prefix else "paragraph"
                 records.append(
                     {
-                        "text": prefix + p.text,
+                        "text": prefix + visible,
                         "kind": kind,
                         "level": level,
                         "locator": {
@@ -289,7 +303,7 @@ def read_docx(path):
                                 for n in child.iter(qn("w:" + tag))
                             ],
                         },
-                        "original_text": p.text,
+                        "original_text": visible,
                         "number_label": prefix,
                     }
                 )
@@ -316,17 +330,14 @@ def read_docx(path):
     for p in footers:
         walk(p.element, str(p.partname), {"region": "footer"})
     # Notes may be generic OPC parts rather than parsed python-docx story parts.
-    from lxml import etree
+    from docx.oxml import parse_xml
 
     roots = [("/word/document.xml", doc.element.body)] + [
         (str(p.partname), p.element) for p in headers + footers
     ]
     for part in doc.part.package.parts:
         if str(part.partname) in ("/word/footnotes.xml", "/word/endnotes.xml"):
-            root = etree.fromstring(
-                part.blob,
-                parser=etree.XMLParser(resolve_entities=False, no_network=True),
-            )
+            root = parse_xml(part.blob)
             for note in root:
                 if int(note.get(qn("w:id"), "0")) < 0:
                     continue

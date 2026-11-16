@@ -4,7 +4,7 @@ import re
 from difflib import SequenceMatcher
 from .normalization import canonicalize, plain, MARKERS
 
-QUALITY_VERSION = "es-legal-v2.1"
+QUALITY_VERSION = "es-legal-v2.2"
 
 
 def words(text):

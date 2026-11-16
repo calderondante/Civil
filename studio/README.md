@@ -1,10 +1,13 @@
-# Academic Audio Studio — apuntes personales, lectura fiel en cloud
+# Academic Audio Studio — clases y lecturas personales en cloud
 
 Herramienta personal para adjuntar un Word/PDF y su programa, conservar íntegro el contenido y obtener audio en CPU dentro de la cuota existente de Codex. Sin APIs comerciales, hosting, Supabase ni procesamiento en tu PC.
 
-El flujo actual está explicado en **[Lectura fiel e importación DOCX/PDF](docs/PERSONAL_READING.md)**. El modo documental de dos profesores sigue disponible como opción.
+Para clases originales de dos docentes, usar **[Conversación magistral](docs/MAGISTRAL_DIALOGUE.md)**: Codex redacta y coteja las fuentes dentro de la conversación; Kokoro sintetiza después de la aprobación. No se añade ninguna API de lenguaje paga.
+
+Para conservar literalmente todo el apunte, usar **[Lectura fiel e importación DOCX/PDF](docs/PERSONAL_READING.md)**. El modo documental anterior sigue disponible. La cobertura editorial magistral se declara por alcance; una matriz completa no basta para certificar equivalencia jurídica.
 
 - [Resultados reales y revisión de los 13 avisos](docs/READING_RESULTS.md).
+- [Dos muestras magistrales y límites observados](docs/MAGISTRAL_RESULTS.md).
 - [Operación privada y costo adicional cero](docs/FREE_CLOUD.md).
 - [Motores abiertos y licencias](docs/OPEN_TTS.md).
 
